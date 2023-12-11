@@ -1,0 +1,228 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex flex-wrap w-full max-w-screen-xl mx-auto p-6 md:p-8">
+
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <h2 class="text-3xl font-semibold tracking-tight leading-8">Dashboard información</h2>
+                <div class="font-medium tracking-tight text-secondary">Seguimiento estado ordenes</div>
+            </div>
+            <div class="flex items-center ml-6">
+                <button class="hidden sm:inline-flex" mat-stroked-button (click)="calltrackingPending()">
+                    <mat-icon [svgIcon]="'heroicons_solid:document-report'" class="icon-size-5"></mat-icon>
+                    <span class="ml-2">Descargar guias pendientes</span>
+                </button>
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button (click)="downloadPaymentFile()">
+                    <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
+                    <span class="ml-2">Pagos pendientes</span>
+                </button>
+
+                <!-- Actions menu (visible on xs) -->
+                <div class="sm:hidden">
+                    <button [matMenuTriggerFor]="actionsMenu" mat-icon-button>
+                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                    </button>
+                    <mat-menu #actionsMenu="matMenu">
+                        <button mat-menu-item>Export</button>
+                        <button mat-menu-item>Reports</button>
+                        <button mat-menu-item>Settings</button>
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 w-full mt-8">
+            <div *ngFor="let metric of metrics" class="grid gap-8 sm:grid-flow-col xl:grid-flow-row">
+                <div
+                    class="relative flex flex-col flex-auto p-6 pr-3 pb-3 mat-card rounded-2xl shadow shadow-blue-900 overflow-hidden">
+                    <div class="col">
+                        <h1 class="text-lg font-medium text-muted mb-0">{{ metric.name }}</h1>
+                    </div>
+                    <div class="col-auto">
+                        <table class="table mt-3">
+                            <tr>
+                                <td class="font-weight-bold-metric">Pedidos</td>
+                                <td>{{ metric.totalOrders }}</td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold-metric">Total</td>
+                                <td class="text-green font-weight-bold-metric">{{ metric.totalAmount |
+                                    currency:'USD':'symbol':'1.2-2' }}</td>
+                            </tr>
+                            <tr>
+                                <td>Pendientes:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Guias</td>
+                                <td>{{ metric.trackingPending }}</td>
+                            </tr>
+                            <tr>
+                                <td>Pagos</td>
+                                <td>{{ metric.paymentPending }}</td>
+                            </tr>
+                            <tr>
+                                <td>Fallidos</td>
+                                <td>{{ metric.proccessFails }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="xl:col-span-1  flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
+            <div class="p-6">
+                <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Transacciones fallidas
+                </div>
+                <div class="text-secondary font-medium">{{salesFail.length}} ordenes fallidas</div>
+            </div>
+            <table [dataSource]="salesFail" class="mat-elevation-z8 w-full" mat-table multiTemplateDataRows matSort>
+                <ng-container *ngFor="let column of columnsToDisplay" matColumnDef="{{column}}">
+                    <th *matHeaderCellDef mat-header-cell> {{getColumnName(column)}} </th>
+                    <td *matCellDef="let element" mat-cell> {{getColumnValue(element, column)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="expand">
+                    <th *matHeaderCellDef aria-label="row actions" mat-header-cell>&nbsp;</th>
+                    <td *matCellDef="let element" mat-cell>
+                        <button
+                            (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()"
+                            aria-label="expand row" mat-icon-button>
+                            <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                            <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+                <ng-container matColumnDef="expandedDetail">
+                    <td *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length" mat-cell>
+                        <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
+                            class="example-element-detail">
+                            <div class="m-2 flexbox w-full">
+                                <div class="">
+                                    <div class=" w-full">
+                                        <div class="table-cell max-w-192">
+                                            <table class="contents table-fixed">
+                                                <tbody>
+                                                    <tr>
+                                                        <th
+                                                            class="text-sm leading-none text-secondary text-center pr-4">
+                                                            referencia
+                                                        </th>
+                                                        <th
+                                                            class="text-sm leading-none text-secondary text-center pr-4">
+                                                            Solicitado
+                                                        </th>
+                                                        <th
+                                                            class="text-sm leading-none text-secondary text-center pr-4">
+                                                            ItemId
+                                                        </th>
+                                                    </tr>
+                                                    <tr *ngFor="let item of element.orderItems" class="h-10">
+                                                        <td
+                                                            class="text-sm leading-none text-secondary text-center pr-1">
+                                                            {{ item.itemSku }}</td>
+                                                        <td
+                                                            class="text-sm leading-none text-secondary text-center pr-1">
+                                                            {{ item.itemQty}}</td>
+                                                        <td
+                                                            class="text-sm leading-none text-secondary text-center pr-1">
+                                                            {{ item.itemId}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="table-cell max-w-192 min-w-180 m-1">
+                                            <table class="contents table-fixed">
+                                                <tbody>
+                                                    <tr>
+                                                        <th class="text-sm leading-none text-secondary pr-4">
+                                                            Facturado:
+                                                        </th>
+                                                        <td class="text-sm leading-none pr-1 text-left"
+                                                            [ngClass]="{ 'text-red': !element.isSuccess }">
+                                                            {{ element.isSuccess ? 'Sí' : 'No' }}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="text-sm leading-none text-secondary pr-4">
+                                                            Orden:
+                                                        </th>
+                                                        <td class="text-sm leading-none text-secondary pr-1 text-left">
+                                                            {{ element.orderJdeOrder }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="text-sm leading-none text-secondary pr-4">
+                                                            Factura:
+                                                        </th>
+                                                        <td class="text-sm leading-none text-secondary pr-1 text-left">
+                                                            {{ element.orderJdeInvoice }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="text-sm leading-none text-secondary pr-4">
+                                                            Mensaje:
+                                                        </th>
+                                                        <td
+                                                            class="text-sm leading-none text-secondary pr-1 text-left text-justify">
+                                                            <table class="contents table-fixed">
+                                                                <tbody>
+                                                                    <tr>
+                                                                    </tr>
+                                                                    <tr>
+                                                                    </tr>
+                                                                    <tr *ngFor="let proccess of element.erpProccesses"
+                                                                        class="h-10">
+                                                                        <td
+                                                                            class="text-sm leading-none text-secondary text-center pr-1">
+                                                                            {{ proccess.erpProccessDate }}
+                                                                        </td>
+                                                                        <td
+                                                                            class="text-sm leading-none text-secondary text-center pr-1">
+                                                                            {{ parseErpMessage(proccess.erpMessage) }}
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="table-cell max-w-192 min-w-100">
+                                            <table class="text-center">
+                                                <tbody>
+                                                    <tr>
+                                                        <div class="mt-1 mb-1">
+                                                            <button class="w-40" color="primary" mat-raised-button (click)="reprocessOrder(element.orderNumber)">
+                                                                <mat-icon>replay</mat-icon>
+                                                                Reprocesar
+                                                            </button>
+                                                        </div>
+                                                    </tr>
+                                                    <tr>
+                                                        <div class="mt-1 mb-1">
+                                                            <button class="w-40" color="primary" mat-raised-button>
+                                                                <mat-icon>download</mat-icon>
+                                                                Guia
+                                                            </button>
+                                                        </div>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr *matHeaderRowDef="columnsToDisplayWithExpand" mat-header-row></tr>
+                <tr (click)="expandedElement = expandedElement === element ? null : element"
+                    *matRowDef="let element; columns: columnsToDisplayWithExpand;"
+                    [class.example-expanded-row]="expandedElement === element" class="example-element-row h-0" mat-row>
+                </tr>
+                <tr *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row h-0" mat-row></tr>
+            </table>
+        </div>
+    </div>
+</div>
