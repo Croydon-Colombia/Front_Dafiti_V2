@@ -1,86 +1,74 @@
 <div class="flex flex-col flex-auto w-full">
     <div class="flex flex-wrap w-full max-w-screen-xl mx-auto p-6 md:p-8">
-
-        <div class="flex items-center justify-between w-full">
-            <div>
-                <h2 class="text-3xl font-semibold tracking-tight leading-8">Dashboard información</h2>
-                <div class="font-medium tracking-tight text-secondary">Seguimiento estado ordenes</div>
-            </div>
-            <div class="flex items-center ml-6">
-                <button class="hidden sm:inline-flex" mat-stroked-button (click)="calltrackingPending()">
-                    <mat-icon [svgIcon]="'heroicons_solid:document-report'" class="icon-size-5"></mat-icon>
-                    <span class="ml-2">Descargar guias pendientes</span>
-                </button>
-                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button (click)="downloadPaymentFile()">
-                    <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
-                    <span class="ml-2">Pagos pendientes</span>
-                </button>
-
-                <!-- Actions menu (visible on xs) -->
-                <div class="sm:hidden">
-                    <button [matMenuTriggerFor]="actionsMenu" mat-icon-button>
-                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
-                    </button>
-                    <mat-menu #actionsMenu="matMenu">
-                        <button mat-menu-item>Export</button>
-                        <button mat-menu-item>Reports</button>
-                        <button mat-menu-item>Settings</button>
-                    </mat-menu>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 w-full mt-8">
-            <div *ngFor="let metric of metrics" class="grid gap-8 sm:grid-flow-col xl:grid-flow-row">
-                <div
-                    class="relative flex flex-col flex-auto p-6 pr-3 pb-3 mat-card rounded-2xl shadow shadow-blue-900 overflow-hidden">
-                    <div class="col">
-                        <h1 class="text-lg font-medium text-muted mb-0">{{ metric.name }}</h1>
-                    </div>
-                    <div class="col-auto">
-                        <table class="table mt-3">
-                            <tr>
-                                <td class="font-weight-bold-metric">Pedidos</td>
-                                <td>{{ metric.totalOrders }}</td>
-                            </tr>
-                            <tr>
-                                <td class="font-weight-bold-metric">Total</td>
-                                <td class="text-green font-weight-bold-metric">{{ metric.totalAmount |
-                                    currency:'USD':'symbol':'1.2-2' }}</td>
-                            </tr>
-                            <tr>
-                                <td>Pendientes:</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Guias</td>
-                                <td>{{ metric.trackingPending }}</td>
-                            </tr>
-                            <tr>
-                                <td>Pagos</td>
-                                <td>{{ metric.paymentPending }}</td>
-                            </tr>
-                            <tr>
-                                <td>Fallidos</td>
-                                <td>{{ metric.proccessFails }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="xl:col-span-1  flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden">
-            <div class="p-6">
-                <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Transacciones fallidas
+            <div class="flex items-center justify-between w-full">
+                <div class="flex flex-col lg:flex-row flex-auto w-full">
+                    <!--<div class="lg:w-1/3 w-full p-4">
+                        <button class="hidden sm:inline-flex" mat-stroked-button>
+                            <mat-icon [svgIcon]="'heroicons_solid:document-report'" class="icon-size-5"></mat-icon>
+                            <span class="ml-2">Descargar guias seleccionadas</span>
+                        </button>
+                    </div>
+                    <div class="lg:w-1/3 w-full p-4">
+                        <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button>
+                            <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
+                            <span class="ml-2">Pagos seleccionados</span>
+                        </button>
+                    </div>-->
+
+                    <!--Buscar-->
+                    <div class="lg:w-1/3 w-full p-4">
+                        <mat-form-field class="w-full">
+                            <input matInput placeholder="Buscar..." (input)="applyFilter($event.target.value)">
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div class="text-secondary font-medium">{{salesFail.length}} ordenes fallidas</div>
             </div>
-            <!--Se agrega el componente de Buscar y Busqueda por fecha-->
-            <app-search-orders></app-search-orders>
-            <table [dataSource]="salesFail" class="mat-elevation-z8 w-full" mat-table multiTemplateDataRows matSort>
+            <!--Busqueda por fecha-->
+            <div class="flex items-center justify-between w-full">
+                <div class="flex flex-col lg:flex-row flex-auto w-full">
+                    <div class="p-6">
+                        <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">Transacciones recibidas
+                        </div>
+                        <div class="text-secondary font-medium">{{ (recentTransactionsDataSource | async)?.length }}
+                            ordenes
+                        </div>
+                    </div>
+                    <mat-form-field class="min-w-100">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                            <input matStartDate formControlName="start" placeholder="Start date">
+                            <input matEndDate formControlName="end" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+
+                        <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start
+                            date</mat-error>
+                        <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!--<table [dataSource]="recentTransactionsDataSource | async" class="mat-elevation-z8 w-full" mat-table
+                multiTemplateDataRows #recentTransactionsTable matSort>
                 <ng-container *ngFor="let column of columnsToDisplay" matColumnDef="{{column}}">
-                    <th *matHeaderCellDef mat-header-cell> {{getColumnName(column)}} </th>
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> {{getColumnName(column)}} </th>
                     <td *matCellDef="let element" mat-cell> {{getColumnValue(element, column)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                        </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                        </mat-checkbox>
+                    </td>
                 </ng-container>
                 <ng-container matColumnDef="expand">
                     <th *matHeaderCellDef aria-label="row actions" mat-header-cell>&nbsp;</th>
@@ -92,10 +80,10 @@
                             <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
                         </button>
                     </td>
-                </ng-container>
+                </ng-container>-->
 
                 <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-                <ng-container matColumnDef="expandedDetail">
+                <!--<ng-container matColumnDef="expandedDetail">
                     <td *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length" mat-cell>
                         <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
                             class="example-element-detail">
@@ -194,7 +182,8 @@
                                                 <tbody>
                                                     <tr>
                                                         <div class="mt-1 mb-1">
-                                                            <button class="w-40" color="primary" mat-raised-button (click)="reprocessOrder(element.orderNumber)">
+                                                            <button class="w-40" color="primary" mat-raised-button
+                                                                (click)="reproceesOrder(element.orderNumber)">
                                                                 <mat-icon>replay</mat-icon>
                                                                 Reprocesar
                                                             </button>
@@ -224,8 +213,7 @@
                     [class.example-expanded-row]="expandedElement === element" class="example-element-row h-0" mat-row>
                 </tr>
                 <tr *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row h-0" mat-row></tr>
-            </table>
+            </table>-->
         </div>
     </div>
 </div>
-

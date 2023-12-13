@@ -10,11 +10,19 @@ import {NgApexchartsModule} from "ng-apexcharts";
 import {dashboardRouting} from "./dashboard.routing";
 import {MatTableModule} from "@angular/material/table";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SearchOrdersComponent } from './search-orders/search-orders.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 @NgModule({
   declarations: [
-      DashboardComponent
+      DashboardComponent,
+      SearchOrdersComponent
   ],
     imports: [
         RouterModule.forChild(dashboardRouting),
@@ -29,7 +37,16 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         NgClass,
         DatePipe,
         NgIf,
-        MatSnackBarModule
+        MatSnackBarModule,
+
+        //Se importan para la aplicación de search-orders
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        ReactiveFormsModule,
+        CommonModule,
+        MatNativeDateModule,
     ]
 })
 export class DashboardModule { }
