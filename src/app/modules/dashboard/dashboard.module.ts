@@ -10,7 +10,6 @@ import {NgApexchartsModule} from "ng-apexcharts";
 import {dashboardRouting} from "./dashboard.routing";
 import {MatTableModule} from "@angular/material/table";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { SearchOrdersComponent } from './search-orders/search-orders.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -21,8 +20,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
-      DashboardComponent,
-      SearchOrdersComponent
+      DashboardComponent
   ],
     imports: [
         RouterModule.forChild(dashboardRouting),

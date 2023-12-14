@@ -13,7 +13,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { DashboardService } from "./dashboard.service";
-import { Subject, takeUntil } from "rxjs";
+import { BehaviorSubject, Subject, take, takeUntil } from "rxjs";
 import {  MatTableDataSource } from "@angular/material/table";
 import { MatSort } from "@angular/material/sort";
 import { DashBoardData } from "../../Models/dash-board-data";
@@ -22,6 +22,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Order } from 'app/Models/order';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
     selector: 'dashboard',
@@ -38,6 +39,13 @@ import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
     ],
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+
+    recentTransactionsDataSource: BehaviorSubject<MatTableDataSource<Order>> = new BehaviorSubject<MatTableDataSource<Order>>(null);
+
+    orderSort: MatSort;
+
+    selection = new SelectionModel<Order>(true, []);
+
     @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
     columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
     trackingMesagge: string;
@@ -70,7 +78,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     data: DashBoardData;
     expandedElement: OrderInfo | null;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
+    //recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
 
     metrics: Metric[];
     salesFail: Order[];
@@ -93,15 +101,46 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe((response) => {
                 this.metrics = response
             })
-        this.salesApi.data$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((data) => {
-                this.salesFail = data
-            })
+            this.getDataOrdersByDate();
     }
 
-    ngAfterViewInit(): void {
+    getDataOrdersByDate() {
+        this.salesApi.data$.pipe(take(1)).subscribe(data => {
+            const dataSource = new MatTableDataSource<Order>(data);
+            dataSource.sort = this.recentTransactionsTableMatSort;
+            this.recentTransactionsDataSource.next(dataSource);
+            this.salesFail = data
+            console.log(dataSource)
+            console.log(this.recentTransactionsTableMatSort)
+            console.log(this.recentTransactionsDataSource)
+
+        });
+
+        this.recentTransactionsDataSource.pipe(take(1)).subscribe(dataSource => {
+            dataSource.filterPredicate = (data: Order, filter: string) => {
+                // Implementa lógica de búsqueda aquí, por ejemplo:
+                const searchData = `${data.orderNumber} ${data.orderPk} ${data.orderTotalPrice} ${data.orderSellerDate} ${data.marketPlace.mpName}`.toLowerCase();
+                return searchData.includes(filter);
+            };
+
+            const newDataSource = new MatTableDataSource<Order>(dataSource.data);
+            newDataSource.sort = this.recentTransactionsTableMatSort;
+            this.recentTransactionsDataSource.next(newDataSource);
+        });
+    }
+
+    /*ngAfterViewInit(): void {
         this.recentTransactionsDataSource.sort = this.recentTransactionsTableMatSort;
+    }*/
+
+    // Configuraciones después de que las vistas y componentes relacionados se han inicializado
+    ngAfterViewInit(): void {
+        this.orderSort = new MatSort();
+        this.recentTransactionsDataSource.pipe(take(1)).subscribe(dataSource => {
+            const newDataSource = new MatTableDataSource<Order>(dataSource.data);
+            newDataSource.sort = this.recentTransactionsTableMatSort;
+            this.recentTransactionsDataSource.next(newDataSource);
+        });
     }
 
     ngOnDestroy(): void {
@@ -153,6 +192,18 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         return 'archivo.prn';
     }
 
+    masterToggle() {
+        this.isAllSelected()
+            ? this.selection.clear()
+            : this.recentTransactionsDataSource.value.data.forEach(row => this.selection.select(row));
+    }
+
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.recentTransactionsDataSource.value.data.length;
+        return numSelected === numRows;
+    }
+
     parseErpMessage(erpMessage: string): string {
         try {
             // Intenta convertir la cadena JSON a un objeto JavaScript
@@ -171,6 +222,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         // Si no se puede analizar el mensaje o no tiene la propiedad 'DESCRIPCION', devuelve una cadena vacía
         return '';
     }
+
+    // Método para aplicar filtro en la tabla
+    applyFilter(filterValue: string) {
+
+        filterValue = filterValue.trim(); // Elimina espacios en blanco
+        filterValue = filterValue.toLowerCase(); // Convierte el valor a minúsculas
+        this.recentTransactionsDataSource.value.filter = filterValue;
+        console.log('value'+ filterValue);
+
+            // Verifica si el DataSource tiene paginación
+            if (this.recentTransactionsDataSource.value.paginator) {
+            this.recentTransactionsDataSource.value.paginator.firstPage();
+            }
+        }
 
     calltrackingPending() {
 
