@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         'marketPlace.mpName': 'Nombre del Marketplace'
     };
 
-    columnsToDisplayWithExpand = [...this.columnsToDisplay, 'expand'];
+    columnsToDisplayWithExpand = ['select',...this.columnsToDisplay, 'expand'];
     data: DashBoardData;
     expandedElement: OrderInfo | null;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -101,10 +101,12 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe((response) => {
                 this.metrics = response
             })
-            this.getDataOrdersByDate();
+        this.getDataOrdersByDate();
     }
 
+    //Obtener las ordenes por fecha
     getDataOrdersByDate() {
+
         this.salesApi.data$.pipe(take(1)).subscribe(data => {
             const dataSource = new MatTableDataSource<Order>(data);
             dataSource.sort = this.recentTransactionsTableMatSort;

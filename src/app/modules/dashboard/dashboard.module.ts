@@ -16,6 +16,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import { MatNativeDateModule } from '@angular/material/core';
         ReactiveFormsModule,
         CommonModule,
         MatNativeDateModule,
+        MatCheckboxModule
     ]
 })
 export class DashboardModule { }
