@@ -22,7 +22,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Order } from 'app/Models/order';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
-import { SelectionModel } from '@angular/cdk/collections';
+import { DataSource, SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'dashboard',
@@ -86,7 +87,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private _dashboardService: DashboardService, private metricsService: MetricsService,
         private salesApi: SalesApi, private trackingSertvice: TrackingSertvice, private snackBar: MatSnackBar,
-        private paymentsService: PaymentsService) {
+        private paymentsService: PaymentsService,
+        public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
@@ -243,7 +245,22 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.trackingSertvice.downloadTrackingPendings().subscribe(
             response => {
-                console.log('Respuesta de la API:', response); // Asegúrate de que la respuesta sea una cadena de texto
+
+                //Emite el número de guias seleccionadas y el total de guías
+                const totalDeGuiasPendientes = this.recentTransactionsDataSource.value.data.length;
+                const totalDeGuiasSeleccionadas = this.selection.selected.length;
+
+                //console.log('Respuesta de la API:', response); // Asegúrate de que la respuesta sea una cadena de texto
+
+                //Muestra una alerta al usuario al hacer la descarga de las guias seleccionadas
+                alert("Descargando " + totalDeGuiasSeleccionadas + " guías de " + totalDeGuiasPendientes);
+
+                //muestra mensajes
+                console.log(totalDeGuiasSeleccionadas);
+                console.log(totalDeGuiasPendientes);
+                console.log("Descargando "+" "+totalDeGuiasSeleccionadas+" "+"guías seleccionadas de "+ totalDeGuiasPendientes);
+                //console.log (this.recentTransactionsDataSource.value.data);
+
                 this.trackingMesagge = response;
                 //this.mostrarSnackbar(this.trackingMesagge);
             },

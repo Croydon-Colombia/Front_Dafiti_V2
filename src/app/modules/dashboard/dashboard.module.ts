@@ -17,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         ReactiveFormsModule,
         CommonModule,
         MatNativeDateModule,
-        MatCheckboxModule
+        MatCheckboxModule,//se utiliza para el checkbox
+        MatDialogModule
     ]
 })
 export class DashboardModule { }
