@@ -75,12 +75,34 @@
                 </div>
                 <div class="text-secondary font-medium">{{salesFail.length}} ordenes fallidas</div>
             </div>
-            <!--Buscar-->
-            <div class="lg:w-1/3 w-full p-4">
+
+
+            <div class="container">
+            <div class="row">
+                <!--Buscar-->
+                <div class="col-md-4">
                 <mat-form-field class="w-full">
                     <input matInput placeholder="Buscar..." (input)="applyFilter($event.target.value)">
                 </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                <!--Botón que al hacer click se habilita o deshabilita dependiendo del checkbox-->
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar">
+                    <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
+                    <span class="ml-2">Descargar pagos seleccionados</span>
+                </button>
+                </div>
+
+                <div class="col-md-4">
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar">
+                    <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
+                    <span class="ml-2">Descargar guías seleccionadas</span>
+                </button>
+                </div>
             </div>
+            </div>
+
             <!--Inicia la tabla con sus datos-->
             <table [dataSource]="recentTransactionsDataSource | async" class="mat-elevation-z8 w-full" mat-table multiTemplateDataRows matSort>
                 <ng-container *ngFor="let column of columnsToDisplay" matColumnDef="{{column}}">
@@ -89,14 +111,19 @@
                 </ng-container>
                 <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                        <mat-checkbox
+                            (change)="$event ? masterToggle() : null"
                             [checked]="selection.hasValue() && isAllSelected()"
-                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                            >
                         </mat-checkbox>
                     </th>
                     <td mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()"
-                            (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                        <mat-checkbox
+                            (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            >
                         </mat-checkbox>
                     </td>
                 </ng-container>

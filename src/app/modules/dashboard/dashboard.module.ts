@@ -13,7 +13,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -48,7 +48,8 @@ import { MatDialogModule } from '@angular/material/dialog';
         CommonModule,
         MatNativeDateModule,
         MatCheckboxModule,//se utiliza para el checkbox
-        MatDialogModule
+        MatDialogModule,
+        FormsModule
     ]
 })
 export class DashboardModule { }

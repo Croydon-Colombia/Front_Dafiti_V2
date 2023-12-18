@@ -24,7 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
-
+import { forEach } from 'lodash';
 @Component({
     selector: 'dashboard',
     templateUrl: './dashboard.component.html',
@@ -41,11 +41,14 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    habilitar:boolean = false;
+
     recentTransactionsDataSource: BehaviorSubject<MatTableDataSource<Order>> = new BehaviorSubject<MatTableDataSource<Order>>(null);
 
     orderSort: MatSort;
 
     selection = new SelectionModel<Order>(true, []);
+
 
     @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
     columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
@@ -104,6 +107,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.metrics = response
             })
         this.getDataOrdersByDate();
+
     }
 
     //Obtener las ordenes por fecha
