@@ -74,7 +74,8 @@ export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      *
      */
-    constructor(private salesApi: SalesApiByDate, private orderApi: SalesApi,
+    constructor(private salesApi: SalesApiByDate,
+        private orderApi: SalesApi,
         private paymentsService: PaymentsService,
         private trackingSertvice: TrackingSertvice) {
     }
@@ -84,20 +85,28 @@ export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         const ordersNumber: string[] = []; // Declaración y asignación correcta del array
 
         this.selection.selected.forEach(order => {
-          console.log(order.orderNumber);
+          console.log("Número de la orden: "+ order.orderNumber);
           ordersNumber.push(order.orderNumber); // Uso correcto de push para agregar elementos al array
         });
 
         console.log("resultado de ordenes " + ordersNumber);
 
+        const currentDate = new Date();
+        const formattedDate = this.paymentsService.formatDate(currentDate);
+        const formattedTime = this.paymentsService.formatTime(currentDate);
+        const finalFilename = `DF${formattedDate}${formattedTime}.prn`;
+
         this.paymentsService.downloadPaymentsFileByOrdersNumbers(ordersNumber).subscribe(response => {
           const blob = new Blob([response.body], { type: 'application/octet-stream' });
           const url = window.URL.createObjectURL(blob);
+
           const a = document.createElement('a');
           a.href = url;
-          a.download = this.getFileName(response); // Obtener el nombre del archivo de la respuesta
+          a.download = finalFilename; // Obtener el nombre del archivo de la respuesta
+
           document.body.appendChild(a);
           a.click();
+
           window.URL.revokeObjectURL(url);
         },
         error => {
