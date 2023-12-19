@@ -45,6 +45,26 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     habilitar:boolean = false;
 
+    isChecked:boolean = false;
+
+    //Nombre inicial del botón al no estar seleccionado
+    nombreBoton: string = "Reprocesar pedidos fallidos";
+
+    onClick(){
+    //Lógica para cambiar el nombre del botón cuando se selecciona/deselecciona el checkbox principal
+    console.log("Se hizo clic en la casilla");
+    this.actualizarNombreBoton();
+    }
+
+    //si esta seleccionado o si al menos una de las filas esta seleccionada
+    actualizarNombreBoton(){
+        if (this.isChecked || this.selection.hasValue()) {
+            this.nombreBoton = 'Reprocesar pedidos seleccionados';
+            } else {
+            this.nombreBoton = 'Reprocesar pedidos fallidos';
+            }
+        }
+
     recentTransactionsDataSource: BehaviorSubject<MatTableDataSource<Order>> = new BehaviorSubject<MatTableDataSource<Order>>(null);
 
     orderSort: MatSort;
@@ -278,6 +298,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isAllSelected()
             ? this.selection.clear()
             : this.recentTransactionsDataSource.value.data.forEach(row => this.selection.select(row));
+
+            this.actualizarNombreBoton();
     }
 
     isAllSelected() {

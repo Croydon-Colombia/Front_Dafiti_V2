@@ -88,16 +88,9 @@
 
                 <div class="col-md-4">
                 <!--Botón que al hacer click se habilita o deshabilita dependiendo del checkbox-->
-                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar" (click)="downloadPaymentByOrdersNumber()">
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button >
                     <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
-                    <span class="ml-2">Descargar pagos seleccionados</span>
-                </button>
-                </div>
-
-                <div class="col-md-4">
-                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar" (click)="downloadTrackingFilesByOrdersNumbers()">
-                    <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
-                    <span class="ml-2">Descargar guías seleccionadas</span>
+                    <span class="ml-2"> {{nombreBoton}} </span>
                 </button>
                 </div>
             </div>
@@ -112,6 +105,8 @@
                 <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef>
                         <mat-checkbox
+                            (click)="isChecked = !isChecked; onClick()"
+                            [checked]="isChecked"
                             (change)="$event ? masterToggle() : null"
                             [checked]="selection.hasValue() && isAllSelected()"
                             [indeterminate]="selection.hasValue() && !isAllSelected()"
@@ -120,6 +115,7 @@
                     </th>
                     <td mat-cell *matCellDef="let row">
                         <mat-checkbox
+                            (click)="isChecked = !isChecked; onClick()"
                             (click)="$event.stopPropagation()"
                             (change)="$event ? selection.toggle(row) : null"
                             [checked]="selection.isSelected(row)"
