@@ -88,14 +88,14 @@
 
                 <div class="col-md-4">
                 <!--Botón que al hacer click se habilita o deshabilita dependiendo del checkbox-->
-                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar">
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar" (click)="downloadPaymentByOrdersNumber()">
                     <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
                     <span class="ml-2">Descargar pagos seleccionados</span>
                 </button>
                 </div>
 
                 <div class="col-md-4">
-                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar">
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button [disabled]="habilitar" (click)="downloadTrackingFilesByOrdersNumbers()">
                     <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
                     <span class="ml-2">Descargar guías seleccionadas</span>
                 </button>
@@ -105,7 +105,7 @@
 
             <!--Inicia la tabla con sus datos-->
             <table [dataSource]="recentTransactionsDataSource | async" class="mat-elevation-z8 w-full" mat-table multiTemplateDataRows matSort>
-                <ng-container *ngFor="let column of columnsToDisplay" matColumnDef="{{column}}">
+                <ng-container *ngFor="let column of columnsToDisplay" matColumnDef="{{column}}" >
                     <th *matHeaderCellDef mat-header-cell> {{getColumnName(column)}} </th>
                     <td *matCellDef="let element" mat-cell> {{getColumnValue(element, column)}} </td>
                 </ng-container>
@@ -273,4 +273,3 @@
         </div>
     </div>
 </div>
-

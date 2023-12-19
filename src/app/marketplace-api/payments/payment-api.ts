@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { List } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -23,4 +24,16 @@ export class PaymentsService {
       observe: 'response'
     });
   }
+
+  //descargar archivo de pagos por números de pedidos
+    downloadPaymentsFileByOrdersNumbers(ordersNumbers : string[]): Observable<HttpResponse<Blob>>{
+
+      return this.http.post(this.apiUrl + 'ListOrders/getPaymentFileByOrderNumbers', ordersNumbers, {
+        //headers: headers,
+        responseType: 'blob',
+        observe: 'response'
+      });
 }
+
+}
+

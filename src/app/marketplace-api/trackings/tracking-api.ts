@@ -17,4 +17,16 @@ export class TrackingSertvice {
         switchMap(() => this.http.put(this.apiUrl + 'PendingTracking/DownloadPendingGuides', null, { responseType: 'text' }))
     );
   }
+
+  //Descargar guías
+  downloadTrackingByOrdersNumbers(orderNumbers : string[]){
+    const body = {
+    orderNumbers
+    }
+
+    return of(null).pipe(
+        switchMap(() => this.http.post(this.apiUrl+'PendingTracking/DownloadPendingGuidesByOrdersNumbers',orderNumbers,{ responseType: 'text'}))
+    );
+  }
+
 }
