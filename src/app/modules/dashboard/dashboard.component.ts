@@ -116,7 +116,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(private _dashboardService: DashboardService, private metricsService: MetricsService,
         private salesApi: SalesApi, private trackingSertvice: TrackingSertvice, private snackBar: MatSnackBar,
-        private paymentsService: PaymentsService,
+        private paymentsService: PaymentsService, private orderApi: SalesApi,
         public dialog: MatDialog) {
     }
 
@@ -190,16 +190,26 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
 
+      //Pagos pendientes
     downloadPaymentFile(): void {
+
+        const currentDate = new Date();
+        const formattedDate = this.paymentsService.formatDate(currentDate);
+        const formattedTime = this.paymentsService.formatTime(currentDate);
+        const finalFilename = `DF${formattedDate}${formattedTime}.prn`;
+
         this.paymentsService.downloadFile().subscribe(response => {
-            console.log(response)
+            console.log("respuesta:"+ response)
             const blob = new Blob([response.body], { type: 'application/octet-stream' });
             const url = window.URL.createObjectURL(blob);
+
             const a = document.createElement('a');
             a.href = url;
-            a.download = this.getFileName(response); // Obtener el nombre del archivo de la respuesta
+            a.download = finalFilename; // Obtener el nombre del archivo de la respuesta
+
             document.body.appendChild(a);
             a.click();
+
             window.URL.revokeObjectURL(url);
         });
     }
@@ -348,6 +358,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         }
 
+    //Descargar guías pendientes
     calltrackingPending() {
 
         this.trackingSertvice.downloadTrackingPendings().subscribe(
