@@ -11,6 +11,8 @@ import { SalesApiByDate } from 'app/marketplace-api/sales/sales-api-by-date';
 import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
 import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
 import { TrackingSertvice } from 'app/marketplace-api/trackings/tracking-api';
+import { MatTableDataSourcePaginator } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'dafiti.orders',
@@ -35,10 +37,13 @@ export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     recentTransactionsDataSource: BehaviorSubject<MatTableDataSource<Order>> = new BehaviorSubject<MatTableDataSource<Order>>(null);
     selection = new SelectionModel<Order>(true, []);
     @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
     trackingMesagge: string;
 
-    columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
+    // Referencia al paginador-paginator
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     columnsToDisplayWithExpand = ['select', ...this.columnsToDisplay, 'expand'];
 
     columnMappings: { [key: string]: string } = {
@@ -140,10 +145,9 @@ export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 alert("Descargando " + totalDeGuiasSeleccionadas + " guías de " + totalDeGuiasPendientes);
 
                 //muestra mensajes
-                console.log(totalDeGuiasSeleccionadas);
-                console.log(totalDeGuiasPendientes);
+                console.log("guias seleccionadas: "+ totalDeGuiasSeleccionadas);
+                console.log("total de guias: "+ totalDeGuiasPendientes);
                 console.log("Descargando "+" "+totalDeGuiasSeleccionadas+" "+"guías seleccionadas de "+ totalDeGuiasPendientes);
-                //console.log (this.recentTransactionsDataSource.value.data);
 
                 this.trackingMesagge = response;
                 //this.mostrarSnackbar(this.trackingMesagge);
@@ -201,9 +205,13 @@ export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log(this.isLoading)
             const dataSource = new MatTableDataSource<Order>(data);
             dataSource.sort = this.recentTransactionsTableMatSort;
+
+            // Configuración del paginador (paginator)
+            dataSource.paginator = this.paginator;
+
             this.recentTransactionsDataSource.next(dataSource);
             this.isLoading = false; // Marca isLoading como falso cuando los datos se han cargado.
-            console.log(dataSource)
+            console.log("dataSource: "+ dataSource)
             console.log(this.recentTransactionsTableMatSort)
             console.log(this.recentTransactionsDataSource)
             console.log(this.isLoading)

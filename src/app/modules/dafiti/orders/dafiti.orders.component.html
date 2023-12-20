@@ -47,7 +47,7 @@
                     </mat-form-field>
                 </div>
             </div>
-
+            <!--Inicia la tabla con sus datos-->
             <table [dataSource]="recentTransactionsDataSource | async" class="mat-elevation-z8 w-full" mat-table
                 multiTemplateDataRows #recentTransactionsTable matSort>
                 <ng-container *ngFor="let column of columnsToDisplay" matColumnDef="{{column}}">
@@ -211,6 +211,8 @@
                 </tr>
                 <tr *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row h-0" mat-row></tr>
             </table>
+            <!--Paginación-->
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" ></mat-paginator>
         </div>
     </div>
 </div>
