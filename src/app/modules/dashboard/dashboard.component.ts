@@ -26,6 +26,7 @@ import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { List, forEach } from 'lodash';
 import { MatTableDataSourcePaginator } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'dashboard',
@@ -75,6 +76,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
     columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
     trackingMesagge: string;
+
+    // Referencia al paginador-paginator
+      @ViewChild(MatPaginator) paginator!: MatPaginator;
 
     getColumnName(column: string): string {
         return this.columnMappings[column] || column;
@@ -254,6 +258,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             const newDataSource = new MatTableDataSource<Order>(dataSource.data);
             newDataSource.sort = this.recentTransactionsTableMatSort;
             this.recentTransactionsDataSource.next(newDataSource);
+
+            // Configuración del paginador-paginator
+            this.recentTransactionsDataSource.value.paginator = this.paginator;
         });
     }
 

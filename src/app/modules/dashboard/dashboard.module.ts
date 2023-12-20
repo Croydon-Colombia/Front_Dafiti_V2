@@ -18,6 +18,8 @@ import { CommonModule } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
 
 @NgModule({
   declarations: [
@@ -39,7 +41,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         MatSnackBarModule,
 
         //Se importan para la aplicación de search-orders
-        MatTableModule,
+
         MatFormFieldModule,
         MatInputModule,
         MatDatepickerModule,
@@ -47,8 +49,10 @@ import { MatDialogModule } from '@angular/material/dialog';
         CommonModule,
         MatNativeDateModule,
         MatCheckboxModule,//se utiliza para el checkbox
-        MatDialogModule,
-        FormsModule
+        MatDialogModule,//para la alerta
+        FormsModule,
+        MatPaginatorModule//paginación
+
     ]
 })
 export class DashboardModule { }

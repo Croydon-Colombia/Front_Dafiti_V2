@@ -266,6 +266,8 @@
                 </tr>
                 <tr *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row h-0" mat-row></tr>
             </table>
+            <!--Paginación-->
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
         </div>
     </div>
 </div>
