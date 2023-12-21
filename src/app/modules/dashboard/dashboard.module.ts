@@ -19,6 +19,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -51,8 +52,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
         MatCheckboxModule,//se utiliza para el checkbox
         MatDialogModule,//para la alerta
         FormsModule,
-        MatPaginatorModule//paginación
-
+        MatPaginatorModule,//paginación
+        MatSortModule//ordenar las filas de la tabla según valores de la columna
     ]
 })
 export class DashboardModule { }
