@@ -18,6 +18,12 @@ import { CommonModule } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+<<<<<<< Updated upstream
+=======
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import * as XLSX from 'xlsx';
+>>>>>>> Stashed changes
 
 
 @NgModule({
@@ -48,7 +54,14 @@ import { MatDialogModule } from '@angular/material/dialog';
         CommonModule,
         MatNativeDateModule,
         MatCheckboxModule,//se utiliza para el checkbox
+<<<<<<< Updated upstream
         MatDialogModule
+=======
+        MatDialogModule,//para la alerta
+        FormsModule,
+        MatPaginatorModule,//paginación
+        MatSortModule,//ordenar las filas de la tabla según valores de la columna
+>>>>>>> Stashed changes
     ]
 })
 export class DashboardModule { }

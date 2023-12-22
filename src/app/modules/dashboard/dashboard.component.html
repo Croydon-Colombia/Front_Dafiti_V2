@@ -80,6 +80,26 @@
                 <mat-form-field class="w-full">
                     <input matInput placeholder="Buscar..." (input)="applyFilter($event.target.value)">
                 </mat-form-field>
+<<<<<<< Updated upstream
+=======
+                </div>
+
+                <div class="col-md-4">
+                <!--Botón que al hacer click en el checkbox cambia el nombre del botón-->
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button >
+                    <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
+                    <span class="ml-2"> {{nombreBoton}} </span>
+                </button>
+                </div>
+
+                <div class="col-md-4">
+                    <!--Botón de exportar el excel-->
+                    <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button (click)="exportToExcel()" >
+                        <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
+                        <span class="ml-2"> Exportar reporte </span>
+                    </button>
+                    </div>
+>>>>>>> Stashed changes
             </div>
             <!--Inicia la tabla con sus datos-->
             <table [dataSource]="recentTransactionsDataSource | async" class="mat-elevation-z8 w-full" mat-table multiTemplateDataRows matSort>

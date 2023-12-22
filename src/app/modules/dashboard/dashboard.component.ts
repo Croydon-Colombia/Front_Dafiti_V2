@@ -1,3 +1,4 @@
+import { OrderCustomers } from './../../Models/order-customer';
 import { CustomSnackbarComponent } from '../custom-snackbar/custom-snackbar.component';
 import { TrackingSertvice } from '../../marketplace-api/trackings/tracking-api';
 import { SalesApi } from '../../marketplace-api/sales/sales-api';
@@ -24,6 +25,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
+<<<<<<< Updated upstream
+=======
+import { List, forEach } from 'lodash';
+import { MatTableDataSourcePaginator } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import * as XLSX from 'xlsx';
+import { ERPProccess } from 'app/Models/erp-proccess';
+import { OrderItem } from 'app/Models/order-item';
+>>>>>>> Stashed changes
 
 @Component({
     selector: 'dashboard',
@@ -84,13 +94,162 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     metrics: Metric[];
     salesFail: Order[];
 
-
     constructor(private _dashboardService: DashboardService, private metricsService: MetricsService,
         private salesApi: SalesApi, private trackingSertvice: TrackingSertvice, private snackBar: MatSnackBar,
         private paymentsService: PaymentsService,
         public dialog: MatDialog) {
     }
 
+<<<<<<< Updated upstream
+=======
+    //Datos necesarios para exportar en el excel
+    mostrarDatosExportarReporte(objeto: Order): void {
+        console.log(`Datos generales del objeto:`);
+        console.log(`Número de orden: ${objeto.orderPk}`);
+        console.log(`Número de pedido: ${objeto.orderNumber}`);
+        console.log("Numero de cedula: "+objeto.orderCustomers.customerRegNumber);
+
+
+        console.log(`Datos de erpProccesses:`);
+        objeto.erpProccesses.forEach((erpProccess, index) => {
+            console.log(`ERPProccess ${index + 1}:`);
+            console.log(`Fecha: ${erpProccess.erpProccessDate}`);
+            console.log(`Mensaje: ${erpProccess.erpMessage}`);
+        });
+
+        console.log(`Datos de orderItems:`);
+        objeto.orderItems.forEach((orderItems, index) => {
+            console.log(`OrderItem ${index + 1}:`);
+            console.log(`Referencia: ${orderItems.itemSku}`);
+        });
+
+    }
+
+    exportToExcel(): void {
+
+        // Itera sobre cada objeto en el arreglo y muestra los datos
+        this.salesFail.forEach(objeto => {
+            this.mostrarDatosExportarReporte(objeto);
+        });
+
+        console.log("Excel exportado");
+        console.log("imprimiendo cada uno de los objetos de esas ordenes fallidas: "+ this.salesFail);
+        console.log("imprimiendo el número de ordenes fallidas: "+ this.salesFail.length);
+
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.salesFail);
+        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        this.saveAsExcelFile(excelBuffer, 'exported-data');
+
+    }
+
+    private saveAsExcelFile(buffer: any, fileName: string): void {
+        const data: Blob = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        const a: HTMLAnchorElement = document.createElement('a');
+        const url: string = window.URL.createObjectURL(data);
+        a.href = url;
+        a.download = fileName + '.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }
+
+    //Descargar pagos seleccionados
+    downloadPaymentByOrdersNumber(){
+        const ordersNumber: string[] = []; // Declaración y asignación correcta del array
+
+        this.selection.selected.forEach(order => {
+          console.log(order.orderNumber);
+          ordersNumber.push(order.orderNumber); // Uso correcto de push para agregar elementos al array
+        });
+
+        console.log("resultado de ordenes " + ordersNumber);
+
+        this.paymentsService.downloadPaymentsFileByOrdersNumbers(ordersNumber).subscribe(response => {
+          const blob = new Blob([response.body], { type: 'application/octet-stream' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.getFileName(response); // Obtener el nombre del archivo de la respuesta
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error => {
+            console.error('Error en la solicitud:', error);
+                this.trackingMesagge = 'Error al realizar la solicitud: ' + error.message;
+                //this.mostrarSnackbar(this.trackingMesagge);
+            }
+
+        );
+      }
+
+      //Descargar guías seleccionadas
+      downloadTrackingFilesByOrdersNumbers(){
+        const ordersNumber: string[] = []; // Declaración y asignación correcta del array
+
+        this.selection.selected.forEach(order => {
+          console.log(order.orderNumber);
+          ordersNumber.push(order.orderNumber); // Uso correcto de push para agregar elementos al array
+        });
+
+        this.trackingSertvice.downloadTrackingByOrdersNumbers(ordersNumber).subscribe(
+            response => {
+
+                //Emite el número de guias seleccionadas y el total de guías
+                const totalDeGuiasPendientes = this.recentTransactionsDataSource.value.data.length;
+                const totalDeGuiasSeleccionadas = this.selection.selected.length;
+
+                //console.log('Respuesta de la API:', response); // Asegúrate de que la respuesta sea una cadena de texto
+
+                //Muestra una alerta al usuario al hacer la descarga de las guias seleccionadas
+                alert("Descargando " + totalDeGuiasSeleccionadas + " guías de " + totalDeGuiasPendientes);
+
+                //muestra mensajes
+                console.log(totalDeGuiasSeleccionadas);
+                console.log(totalDeGuiasPendientes);
+                console.log("Descargando "+" "+totalDeGuiasSeleccionadas+" "+"guías seleccionadas de "+ totalDeGuiasPendientes);
+                //console.log (this.recentTransactionsDataSource.value.data);
+
+                this.trackingMesagge = response;
+                //this.mostrarSnackbar(this.trackingMesagge);
+            },
+            error => {
+                console.error('Error en la solicitud:', error);
+                this.trackingMesagge = 'Error al realizar la solicitud: ' + error.message;
+                //this.mostrarSnackbar(this.trackingMesagge);
+            }
+        );
+
+      }
+
+
+      //Pagos pendientes
+    downloadPaymentFile(): void {
+
+        const currentDate = new Date();
+        const formattedDate = this.paymentsService.formatDate(currentDate);
+        const formattedTime = this.paymentsService.formatTime(currentDate);
+        const finalFilename = `DF${formattedDate}${formattedTime}.prn`;
+
+        this.paymentsService.downloadFile().subscribe(response => {
+            console.log("respuesta:"+ response)
+            const blob = new Blob([response.body], { type: 'application/octet-stream' });
+            const url = window.URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = finalFilename; // Obtener el nombre del archivo de la respuesta
+
+            document.body.appendChild(a);
+            a.click();
+
+            window.URL.revokeObjectURL(url);
+        });
+    }
+
+>>>>>>> Stashed changes
     ngOnInit(): void {
         this._dashboardService.data$
             .pipe(takeUntil(this._unsubscribeAll))
