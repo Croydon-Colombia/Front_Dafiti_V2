@@ -27,6 +27,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { List, forEach } from 'lodash';
 import { MatTableDataSourcePaginator } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import * as XLSX from 'xlsx';
 
 @Component({
     selector: 'dashboard',
@@ -119,6 +120,79 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         private paymentsService: PaymentsService, private orderApi: SalesApi,
         public dialog: MatDialog) {
     }
+
+    //obtener los datos seleccionados
+    getSelectedOrders(): Order[] {
+        return this.selection.selected;
+    }
+
+    exportToExcel(): void {
+        const selectedOrders = this.getSelectedOrders();
+
+        // Verifica si hay elementos seleccionados antes de continuar
+        if (selectedOrders.length === 0) {
+            console.log('No hay elementos seleccionados para exportar.');
+            return;
+        }
+
+        // Construye un nuevo conjunto de datos con propiedades específicas
+        const excelData = selectedOrders.map(objeto => ({
+            NúmeroDePedido: objeto.orderNumber,
+            NúmeroDeOrden: objeto.orderPk,
+            //FechaDelMensaje: objeto.erpProccesses.map(erp => erp.erpProccessDate).join(', '), // Concatena las fechas si hay múltiples erpProccesses
+            Error: objeto.erpProccesses.map(erp => erp.erpMessage).join(', '), // Concatena los mensajes si hay múltiples erpProccesses
+            Referencia: objeto.orderItems.map(item => item.itemSku).join(', '), // Concatena los itemSku si hay múltiples orderItems
+            Cédula: objeto.orderCustomers.customerRegNumber
+        }));
+
+        // Itera sobre cada objeto en el conjunto de datos y muestra los datos
+        excelData.forEach(data => {
+            console.log('Datos a exportar:', data);
+
+        });
+
+        // Convierte el conjunto de datos a una hoja de cálculo de Excel
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+        // Crea un libro de Excel con la hoja de datos
+        const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        // Convierte el libro de Excel a un búfer de datos
+        const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        // Guarda el archivo Excel utilizando la función saveAsExcelFile
+        this.saveAsExcelFile(excelBuffer, 'exported-data');
+    }
+
+    // Función privada para guardar el archivo Excel
+    private saveAsExcelFile(buffer: any, fileName: string): void {
+
+        const currentDate = new Date();
+        const formattedDate = this.paymentsService.formatDate(currentDate);
+        const formattedTime = this.paymentsService.formatTime(currentDate);
+        const finalFilename = `DF${formattedDate}${formattedTime}`;
+
+        // Crea un objeto Blob con el búfer de datos y el tipo MIME correspondiente
+        const data: Blob = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+
+        // Crea un elemento de anclaje (hipervínculo) para descargar el archivo
+        const a: HTMLAnchorElement = document.createElement('a');
+        const url: string = window.URL.createObjectURL(data);
+
+        // Configura los atributos del elemento de anclaje
+        a.href = url;
+        a.download = finalFilename + '.xlsx';
+
+        // Añade el elemento de anclaje al cuerpo del documento
+        document.body.appendChild(a);
+
+        // Simula un clic en el elemento de anclaje para iniciar la descarga
+        a.click();
+
+        // Elimina el elemento de anclaje del cuerpo del documento
+        document.body.removeChild(a);
+
+        // Revoca el objeto URL para liberar recursos
+        window.URL.revokeObjectURL(url);
+      }
+
 
     //Descargar pagos seleccionados
     downloadPaymentByOrdersNumber(){

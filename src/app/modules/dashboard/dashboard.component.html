@@ -96,7 +96,7 @@
 
                 <div class="col-md-4">
                     <!--Botón de exportar el excel-->
-                    <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button >
+                    <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button (click)="exportToExcel()" >
                         <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
                         <span class="ml-2"> Exportar reporte </span>
                     </button>
