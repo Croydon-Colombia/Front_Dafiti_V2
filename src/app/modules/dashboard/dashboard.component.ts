@@ -1,4 +1,3 @@
-import { OrderCustomers } from './../../Models/order-customer';
 import { CustomSnackbarComponent } from '../custom-snackbar/custom-snackbar.component';
 import { TrackingSertvice } from '../../marketplace-api/trackings/tracking-api';
 import { SalesApi } from '../../marketplace-api/sales/sales-api';
@@ -25,15 +24,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
-<<<<<<< Updated upstream
-=======
 import { List, forEach } from 'lodash';
 import { MatTableDataSourcePaginator } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
-import { ERPProccess } from 'app/Models/erp-proccess';
-import { OrderItem } from 'app/Models/order-item';
->>>>>>> Stashed changes
 
 @Component({
     selector: 'dashboard',
@@ -51,15 +45,41 @@ import { OrderItem } from 'app/Models/order-item';
 })
 export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
+    habilitar:boolean = false;
+
+    isChecked:boolean = false;
+
+    //Nombre inicial del botón al no estar seleccionado
+    nombreBoton: string = "Reprocesar pedidos fallidos";
+
+    onClick(){
+    //Lógica para cambiar el nombre del botón cuando se selecciona/deselecciona el checkbox principal
+    console.log("Se hizo clic en la casilla");
+    this.actualizarNombreBoton();
+    }
+
+    //si esta seleccionado o si al menos una de las filas esta seleccionada
+    actualizarNombreBoton(){
+        if (this.isChecked || this.selection.hasValue()) {
+            this.nombreBoton = 'Reprocesar pedidos seleccionados';
+            } else {
+            this.nombreBoton = 'Reprocesar pedidos fallidos';
+            }
+        }
+
     recentTransactionsDataSource: BehaviorSubject<MatTableDataSource<Order>> = new BehaviorSubject<MatTableDataSource<Order>>(null);
 
     orderSort: MatSort;
 
     selection = new SelectionModel<Order>(true, []);
 
+
     @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
     columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
     trackingMesagge: string;
+
+    // Referencia al paginador-paginator
+      @ViewChild(MatPaginator) paginator!: MatPaginator;
 
     getColumnName(column: string): string {
         return this.columnMappings[column] || column;
@@ -94,66 +114,85 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     metrics: Metric[];
     salesFail: Order[];
 
+
     constructor(private _dashboardService: DashboardService, private metricsService: MetricsService,
         private salesApi: SalesApi, private trackingSertvice: TrackingSertvice, private snackBar: MatSnackBar,
-        private paymentsService: PaymentsService,
+        private paymentsService: PaymentsService, private orderApi: SalesApi,
         public dialog: MatDialog) {
     }
 
-<<<<<<< Updated upstream
-=======
-    //Datos necesarios para exportar en el excel
-    mostrarDatosExportarReporte(objeto: Order): void {
-        console.log(`Datos generales del objeto:`);
-        console.log(`Número de orden: ${objeto.orderPk}`);
-        console.log(`Número de pedido: ${objeto.orderNumber}`);
-        console.log("Numero de cedula: "+objeto.orderCustomers.customerRegNumber);
-
-
-        console.log(`Datos de erpProccesses:`);
-        objeto.erpProccesses.forEach((erpProccess, index) => {
-            console.log(`ERPProccess ${index + 1}:`);
-            console.log(`Fecha: ${erpProccess.erpProccessDate}`);
-            console.log(`Mensaje: ${erpProccess.erpMessage}`);
-        });
-
-        console.log(`Datos de orderItems:`);
-        objeto.orderItems.forEach((orderItems, index) => {
-            console.log(`OrderItem ${index + 1}:`);
-            console.log(`Referencia: ${orderItems.itemSku}`);
-        });
-
+    //obtener los datos seleccionados
+    getSelectedOrders(): Order[] {
+        return this.selection.selected;
     }
 
     exportToExcel(): void {
+        const selectedOrders = this.getSelectedOrders();
 
-        // Itera sobre cada objeto en el arreglo y muestra los datos
-        this.salesFail.forEach(objeto => {
-            this.mostrarDatosExportarReporte(objeto);
+        // Verifica si hay elementos seleccionados antes de continuar
+        if (selectedOrders.length === 0) {
+            console.log('No hay elementos seleccionados para exportar.');
+            return;
+        }
+
+        // Construye un nuevo conjunto de datos con propiedades específicas
+        const excelData = selectedOrders.map(objeto => ({
+            NúmeroDePedido: objeto.orderNumber,
+            NúmeroDeOrden: objeto.orderPk,
+            //FechaDelMensaje: objeto.erpProccesses.map(erp => erp.erpProccessDate).join(', '), // Concatena las fechas si hay múltiples erpProccesses
+            Error: objeto.erpProccesses.map(erp => erp.erpMessage).join(', '), // Concatena los mensajes si hay múltiples erpProccesses
+            Referencia: objeto.orderItems.map(item => item.itemSku).join(', '), // Concatena los itemSku si hay múltiples orderItems
+            Cédula: objeto.orderCustomers.customerRegNumber
+        }));
+
+        // Itera sobre cada objeto en el conjunto de datos y muestra los datos
+        excelData.forEach(data => {
+            console.log('Datos a exportar:', data);
+
         });
 
-        console.log("Excel exportado");
-        console.log("imprimiendo cada uno de los objetos de esas ordenes fallidas: "+ this.salesFail);
-        console.log("imprimiendo el número de ordenes fallidas: "+ this.salesFail.length);
-
-        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.salesFail);
+        // Convierte el conjunto de datos a una hoja de cálculo de Excel
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
+        // Crea un libro de Excel con la hoja de datos
         const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+        // Convierte el libro de Excel a un búfer de datos
         const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        // Guarda el archivo Excel utilizando la función saveAsExcelFile
         this.saveAsExcelFile(excelBuffer, 'exported-data');
-
     }
 
+    // Función privada para guardar el archivo Excel
     private saveAsExcelFile(buffer: any, fileName: string): void {
+
+        const currentDate = new Date();
+        const formattedDate = this.paymentsService.formatDate(currentDate);
+        const formattedTime = this.paymentsService.formatTime(currentDate);
+        const finalFilename = `DF${formattedDate}${formattedTime}`;
+
+        // Crea un objeto Blob con el búfer de datos y el tipo MIME correspondiente
         const data: Blob = new Blob([buffer], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+
+        // Crea un elemento de anclaje (hipervínculo) para descargar el archivo
         const a: HTMLAnchorElement = document.createElement('a');
         const url: string = window.URL.createObjectURL(data);
+
+        // Configura los atributos del elemento de anclaje
         a.href = url;
-        a.download = fileName + '.xlsx';
+        a.download = finalFilename + '.xlsx';
+
+        // Añade el elemento de anclaje al cuerpo del documento
         document.body.appendChild(a);
+
+        // Simula un clic en el elemento de anclaje para iniciar la descarga
         a.click();
+
+        // Elimina el elemento de anclaje del cuerpo del documento
         document.body.removeChild(a);
+
+        // Revoca el objeto URL para liberar recursos
         window.URL.revokeObjectURL(url);
       }
+
 
     //Descargar pagos seleccionados
     downloadPaymentByOrdersNumber(){
@@ -249,7 +288,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
->>>>>>> Stashed changes
     ngOnInit(): void {
         this._dashboardService.data$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -263,6 +301,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.metrics = response
             })
         this.getDataOrdersByDate();
+
     }
 
     //Obtener las ordenes por fecha
@@ -303,6 +342,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             const newDataSource = new MatTableDataSource<Order>(dataSource.data);
             newDataSource.sort = this.recentTransactionsTableMatSort;
             this.recentTransactionsDataSource.next(newDataSource);
+
+            // Configuración del paginador-paginator
+            this.recentTransactionsDataSource.value.paginator = this.paginator;
         });
     }
 
@@ -330,19 +372,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    downloadPaymentFile(): void {
-        this.paymentsService.downloadFile().subscribe(response => {
-            console.log(response)
-            const blob = new Blob([response.body], { type: 'application/octet-stream' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = this.getFileName(response); // Obtener el nombre del archivo de la respuesta
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-        });
-    }
+
 
     private getFileName(response: any): string {
         const contentDispositionHeader = response.headers.get('Content-Disposition');
@@ -359,6 +389,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isAllSelected()
             ? this.selection.clear()
             : this.recentTransactionsDataSource.value.data.forEach(row => this.selection.select(row));
+
+            this.actualizarNombreBoton();
     }
 
     isAllSelected() {
@@ -400,6 +432,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         }
 
+    //Descargar guías pendientes
     calltrackingPending() {
 
         this.trackingSertvice.downloadTrackingPendings().subscribe(
@@ -442,5 +475,3 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 }
-
-

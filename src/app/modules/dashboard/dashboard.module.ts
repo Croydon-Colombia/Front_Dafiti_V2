@@ -13,17 +13,14 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
-<<<<<<< Updated upstream
-=======
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import * as XLSX from 'xlsx';
->>>>>>> Stashed changes
 
 
 @NgModule({
@@ -54,14 +51,11 @@ import * as XLSX from 'xlsx';
         CommonModule,
         MatNativeDateModule,
         MatCheckboxModule,//se utiliza para el checkbox
-<<<<<<< Updated upstream
-        MatDialogModule
-=======
+        MatDialogModule,
         MatDialogModule,//para la alerta
         FormsModule,
         MatPaginatorModule,//paginación
         MatSortModule,//ordenar las filas de la tabla según valores de la columna
->>>>>>> Stashed changes
     ]
 })
 export class DashboardModule { }

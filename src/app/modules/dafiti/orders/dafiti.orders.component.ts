@@ -9,6 +9,10 @@ import { OrderInfo } from 'app/Models/order-info';
 import { SalesApi } from 'app/marketplace-api/sales/sales-api';
 import { SalesApiByDate } from 'app/marketplace-api/sales/sales-api-by-date';
 import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
+import { PaymentsService } from 'app/marketplace-api/payments/payment-api';
+import { TrackingSertvice } from 'app/marketplace-api/trackings/tracking-api';
+import { MatTableDataSourcePaginator } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'dafiti.orders',
@@ -25,14 +29,21 @@ import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
     ],
 })
 export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
+
+    habilitar:boolean = false;
+
     orderSort: MatSort;
     isLoading: boolean = true;
     recentTransactionsDataSource: BehaviorSubject<MatTableDataSource<Order>> = new BehaviorSubject<MatTableDataSource<Order>>(null);
     selection = new SelectionModel<Order>(true, []);
     @ViewChild('recentTransactionsTable', { read: MatSort }) recentTransactionsTableMatSort: MatSort;
+    columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
+    trackingMesagge: string;
+
+    // Referencia al paginador-paginator
+    @ViewChild(MatPaginator) paginator: MatPaginator;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    columnsToDisplay = ['orderNumber', 'orderPk', 'orderTotalPrice', 'orderSellerDate', 'marketPlace.mpName'];
     columnsToDisplayWithExpand = ['select', ...this.columnsToDisplay, 'expand'];
 
     columnMappings: { [key: string]: string } = {
@@ -68,7 +79,111 @@ export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      *
      */
-    constructor(private salesApi: SalesApiByDate, private orderApi: SalesApi) {
+    constructor(private salesApi: SalesApiByDate,
+        private orderApi: SalesApi,
+        private paymentsService: PaymentsService,
+        private trackingSertvice: TrackingSertvice) {
+    }
+
+    //Descargar pagos seleccionados
+    downloadPaymentByOrdersNumber(){
+        const ordersNumber: string[] = []; // Declaración y asignación correcta del array
+
+        this.selection.selected.forEach(order => {
+          console.log("Número de la orden: "+ order.orderNumber);
+          ordersNumber.push(order.orderNumber); // Uso correcto de push para agregar elementos al array
+        });
+
+        console.log("resultado de ordenes " + ordersNumber);
+
+        const currentDate = new Date();
+        const formattedDate = this.paymentsService.formatDate(currentDate);
+        const formattedTime = this.paymentsService.formatTime(currentDate);
+        const finalFilename = `DF${formattedDate}${formattedTime}.prn`;
+
+        this.paymentsService.downloadPaymentsFileByOrdersNumbers(ordersNumber).subscribe(response => {
+          const blob = new Blob([response.body], { type: 'application/octet-stream' });
+          const url = window.URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = finalFilename; // Obtener el nombre del archivo de la respuesta
+
+          document.body.appendChild(a);
+          a.click();
+
+          window.URL.revokeObjectURL(url);
+        },
+        error => {
+            console.error('Error en la solicitud:', error);
+                this.trackingMesagge = 'Error al realizar la solicitud: ' + error.message;
+                //this.mostrarSnackbar(this.trackingMesagge);
+            }
+
+        );
+      }
+
+      //Descargar guías seleccionadas
+      downloadTrackingFilesByOrdersNumbers(){
+        const ordersNumber: string[] = []; // Declaración y asignación correcta del array
+
+        this.selection.selected.forEach(order => {
+          console.log(order.orderNumber);
+          ordersNumber.push(order.orderNumber); // Uso correcto de push para agregar elementos al array
+        });
+
+        this.trackingSertvice.downloadTrackingByOrdersNumbers(ordersNumber).subscribe(
+            response => {
+
+                //Emite el número de guias seleccionadas y el total de guías
+                const totalDeGuiasPendientes = this.recentTransactionsDataSource.value.data.length;
+                const totalDeGuiasSeleccionadas = this.selection.selected.length;
+
+                //console.log('Respuesta de la API:', response); // Asegúrate de que la respuesta sea una cadena de texto
+
+                //Muestra una alerta al usuario al hacer la descarga de las guias seleccionadas
+                alert("Descargando " + totalDeGuiasSeleccionadas + " guías de " + totalDeGuiasPendientes);
+
+                //muestra mensajes
+                console.log("guias seleccionadas: "+ totalDeGuiasSeleccionadas);
+                console.log("total de guias: "+ totalDeGuiasPendientes);
+                console.log("Descargando "+" "+totalDeGuiasSeleccionadas+" "+"guías seleccionadas de "+ totalDeGuiasPendientes);
+
+                this.trackingMesagge = response;
+                //this.mostrarSnackbar(this.trackingMesagge);
+            },
+            error => {
+                console.error('Error en la solicitud:', error);
+                this.trackingMesagge = 'Error al realizar la solicitud: ' + error.message;
+                //this.mostrarSnackbar(this.trackingMesagge);
+            }
+        );
+
+      }
+
+      downloadPaymentFile(): void {
+        this.paymentsService.downloadFile().subscribe(response => {
+            console.log(response)
+            const blob = new Blob([response.body], { type: 'application/octet-stream' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = this.getFileName(response); // Obtener el nombre del archivo de la respuesta
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+    }
+
+    private getFileName(response: any): string {
+        const contentDispositionHeader = response.headers.get('Content-Disposition');
+        console.log(contentDispositionHeader);
+        const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        const matches = fileNameRegex.exec(contentDispositionHeader);
+        if (matches && matches.length > 1) {
+            return matches[1].replace(/['"]/g, '');
+        }
+        return 'archivo.prn';
     }
 
     ngOnInit(): void {
@@ -90,9 +205,13 @@ export class DafitiOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log(this.isLoading)
             const dataSource = new MatTableDataSource<Order>(data);
             dataSource.sort = this.recentTransactionsTableMatSort;
+
+            // Configuración del paginador (paginator)
+            dataSource.paginator = this.paginator;
+
             this.recentTransactionsDataSource.next(dataSource);
             this.isLoading = false; // Marca isLoading como falso cuando los datos se han cargado.
-            console.log(dataSource)
+            console.log("dataSource: "+ dataSource)
             console.log(this.recentTransactionsTableMatSort)
             console.log(this.recentTransactionsDataSource)
             console.log(this.isLoading)
