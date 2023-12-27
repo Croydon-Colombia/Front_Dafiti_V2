@@ -28,6 +28,7 @@ import { List, forEach } from 'lodash';
 import { MatTableDataSourcePaginator } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
+import { ERPProccess } from 'app/Models/erp-proccess';
 
 @Component({
     selector: 'dashboard',
@@ -140,7 +141,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             NúmeroDePedido: objeto.orderNumber,
             NúmeroDeOrden: objeto.orderPk,
             //FechaDelMensaje: objeto.erpProccesses.map(erp => erp.erpProccessDate).join(', '), // Concatena las fechas si hay múltiples erpProccesses
-            Error: objeto.erpProccesses.map(erp => erp.erpMessage).join(', '), // Concatena los mensajes si hay múltiples erpProccesses
+            //Error: objeto.erpProccesses.map(erp => erp.erpMessage).join(', '), // Concatena los mensajes si hay múltiples erpProccesses y muestra el mensaje completo
+            Error: this.parseErpProcesses(objeto.erpProccesses), // Utiliza una función para obtener el mensaje de error
             Referencia: objeto.orderItems.map(item => item.itemSku).join(', '), // Concatena los itemSku si hay múltiples orderItems
             Cédula: objeto.orderCustomers.customerRegNumber
         }));
@@ -148,7 +150,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         // Itera sobre cada objeto en el conjunto de datos y muestra los datos
         excelData.forEach(data => {
             console.log('Datos a exportar:', data);
-
         });
 
         // Convierte el conjunto de datos a una hoja de cálculo de Excel
@@ -417,6 +418,16 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         // Si no se puede analizar el mensaje o no tiene la propiedad 'DESCRIPCION', devuelve una cadena vacía
         return '';
     }
+
+    // Función para obtener el mensaje de error de los erpProccesses en el excel
+    parseErpProcesses(erpProccesses: ERPProccess[]): string {
+        // Verifica si hay erpProccesses y si el primer proceso tiene la propiedad 'erpMessage'
+        if (erpProccesses && erpProccesses.length > 0 && erpProccesses[0].erpMessage) {
+        // Extrae el mensaje de la propiedad 'erpMessage'
+        return this.parseErpMessage(erpProccesses[0].erpMessage);
+        }
+        return ""; // Devuelve una cadena vacía si no se encuentra el mensaje de error
+}
 
     // Método para aplicar filtro en la tabla
     applyFilter(filterValue: string) {
