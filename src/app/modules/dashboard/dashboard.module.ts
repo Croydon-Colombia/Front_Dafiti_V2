@@ -43,7 +43,7 @@ import * as XLSX from 'xlsx';
         MatSnackBarModule,
 
         //Se importan para la aplicación de search-orders
-
+        MatTableModule,
         MatFormFieldModule,
         MatInputModule,
         MatDatepickerModule,
@@ -51,10 +51,11 @@ import * as XLSX from 'xlsx';
         CommonModule,
         MatNativeDateModule,
         MatCheckboxModule,//se utiliza para el checkbox
+        MatDialogModule,
         MatDialogModule,//para la alerta
         FormsModule,
         MatPaginatorModule,//paginación
-        MatSortModule//ordenar las filas de la tabla según valores de la columna
+        MatSortModule,//ordenar las filas de la tabla según valores de la columna
     ]
 })
 export class DashboardModule { }
