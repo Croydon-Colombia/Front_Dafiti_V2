@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable} from "@angular/core";
 import { Order } from 'app/Models/order';
-import { BehaviorSubject, Observable, of, switchMap, tap} from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, of, switchMap, tap} from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -40,6 +40,24 @@ import { BehaviorSubject, Observable, of, switchMap, tap} from 'rxjs';
             switchMap(() => this.http.post(this.baseUri + 'Orders/ReprocessOrder?OrderNumber=' + order, null, { responseType: 'text' }))
         );
     }
+
+    //Reprocesar todas las ordenes
+    processSales(orders: string[]): Observable<any[]> {
+
+        const apiUrl = this.baseUri + 'MassiveRequest/ReprocessOrderNotSucces' + orders;
+        console.log('URL de la solicitud:', apiUrl);
+        console.log('ordenes: '+ orders);
+        
+        // Crea un array de observables para las solicitudes de reprocesamiento
+        const observables = orders.map(order =>
+            this.http.post(this.baseUri + 'MassiveRequest/ReprocessOrderNotSucces' + order, null, { responseType: 'text' })
+            );
+
+         // Combina todos los observables en uno solo para manejarlos conjuntamente
+        return forkJoin(observables);
+
+    }
+
 
   }
 
