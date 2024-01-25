@@ -3,6 +3,9 @@ import { AuthGuard } from 'app/core/auth/guards/auth.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
+import { ActualizarComponent } from './modules/inventarios/actualizar/actualizar.component';
+import { GestionarmpComponent } from './modules/inventarios/gestionarmp/gestionarmp.component';
+import { AdministracionComponent } from './modules/inventarios/administracion/administracion.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -80,7 +83,14 @@ export const appRoutes: Route[] = [
                     {path: 'orders', loadChildren: () => import('app/modules/dafiti/orders/dafiti.orders.module').then(m => m.DafitiOrdersModule)},
                     {path: 'crossdocking', loadChildren: () => import('app/modules/dafiti/crossdocking/dafiti.crossdocking.module').then(m => m.DafitiCrossdockingModule)}
                 ]
-            }
+            },
+
+            //Inventarios
+            {path:'inventarios', children:[
+                {path:'actualizar', component:ActualizarComponent},
+                {path:'gestionar', component:GestionarmpComponent},
+                {path:'administrar', component:AdministracionComponent}
+            ]}
         ]
     },
 

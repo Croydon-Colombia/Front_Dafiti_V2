@@ -1,0 +1,25 @@
+<div class="contenedor-formulario">
+    <div class="titulo">
+        <p>Parámetros de inventario</p>
+    </div>
+    <div class="titulos">
+        <div class="titulo-uno">
+            <p>Descripción</p>
+        </div>
+        <div class="titulo-dos">
+            <p>Valor</p>
+        </div>
+    </div>
+    <div class="contenedores" *ngFor="let dato of datos">
+        <form>
+            <div class="contiene">
+                <div class="contenedor-uno">
+                    <label for="descripcion" class="form-label">{{ dato.description }}</label>
+                </div>
+                <div class="contenedor-dos">
+                    <input type="text" class="form-control" id="apellido" placeholder="{{ dato.valKey }}">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

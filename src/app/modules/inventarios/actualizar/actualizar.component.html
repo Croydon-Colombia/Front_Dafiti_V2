@@ -1,0 +1,29 @@
+<div class="contenedor-principal">
+    <div class="contiene">
+        <div class="contenedor-contenedor">
+            <h1>SUBE TU ARCHIVO</h1>
+                <form (ngSubmit)="onSubmit()" #fileForm>
+
+                        <label for="fileInput">
+                            <img src="assets/icons/mi-icono.svg" alt="clip">
+                            <span>Seleccionar archivo:</span>
+                        </label>
+
+                        <input type="file" id="fileInput" (change)="onFileSelected($event)" #fileInput class="form-control" />
+
+                        <button type="submit" class="btn btn-primary" [disabled]="!fileInput.files">
+                            Enviar archivo
+                        </button>
+                </form>
+        </div>
+    </div>
+   
+        <!-- Mostrar nombre del archivo seleccionado -->
+    <div>
+        <br>
+        <h1>Detalles del archivo:</h1><br>
+        <p><strong>Archivo seleccionado:</strong> {{ archivoSeleccionado.name }}</p>
+        <p><strong>Tamaño del archivo:</strong> {{ (archivoSeleccionado.size / 1024).toFixed(2) }} KB</p>
+    </div>
+
+</div>
