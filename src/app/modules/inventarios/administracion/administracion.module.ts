@@ -9,7 +9,7 @@ import { AdministrarService } from 'app/marketplace-api/inventory/administrar-ap
     CommonModule,
     HttpClientModule
   ],
-  declarations: [AdministracionComponent],
+  declarations: [],
   providers: [AdministrarService]
 })
 export class AdministracionModule { }

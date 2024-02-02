@@ -34,13 +34,13 @@ export class AdministracionComponent implements OnInit {
    }
 
   ngOnInit() {
-    /*
-    this.administrarService.get().subscribe( datos => {
+
+    /*this.administrarService.get().subscribe( datos => {
         this.datos = datos;
-        if(this.datos.entries.length <= 0){
-            this.datos.push(this.nuevoDato);
-            console.log('Datos defauld: ' +  this.datos);
-        }
+        //if(this.datos.entries.length <= 0){
+          //  this.datos.push(this.nuevoDato);
+            //console.log('Datos defauld: ' +  this.datos);
+        //}
         console.log('datos: '+ this.datos);
     })*/
     this.datos = [...this.nuevoDato];

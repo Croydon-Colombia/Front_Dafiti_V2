@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { AdministracionComponent } from './modules/inventarios/administracion/administracion.component';
 import { ActualizarComponent } from './modules/inventarios/actualizar/actualizar.component';
+import { GestionarmpComponent } from './modules/inventarios/gestionarmp/gestionarmp.component';
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
     scrollPositionRestoration: 'enabled'
@@ -28,7 +29,8 @@ const routerConfig: ExtraOptions = {
         DafitiCrossdockingComponent,
         CustomSnackbarComponent,
         AdministracionComponent,
-        ActualizarComponent
+        ActualizarComponent,
+        GestionarmpComponent
     ],
     imports     : [
         BrowserModule,

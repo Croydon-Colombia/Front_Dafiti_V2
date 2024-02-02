@@ -1,7 +1,6 @@
+import { ActualizarService } from './../../../marketplace-api/inventory/actualizar-api';
 import { Component, OnInit } from '@angular/core';
-import { ActualizarService } from 'app/marketplace-api/inventory/actualizar-api';
 import { HttpErrorResponse } from '@angular/common/http';
-
 
 @Component({
   selector: 'app-actualizar',
@@ -9,11 +8,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./actualizar.component.css']
 })
 export class ActualizarComponent implements OnInit {
+
   archivoSeleccionado: File | undefined;
 
   arregloArchivos:File[]=[];
 
-  constructor(private actualizarService: ActualizarService) {
+  constructor(private actualizarService:ActualizarService) {
     console.log('El servicio está conectando: ',actualizarService);
   }
 
@@ -24,23 +24,28 @@ export class ActualizarComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     this.archivoSeleccionado = inputElement.files ? inputElement.files[0] : null;
 
-    if (this.archivoSeleccionado) {
+    if (!this.archivoSeleccionado) {
+        console.error('No se ha seleccionado ningún archivo');
+    }else{
         this.arregloArchivos.push(this.archivoSeleccionado)
         console.log('Detalles del archivo');
         console.log('Nombre del archivo', this.archivoSeleccionado.name);
         console.log('Tamaño del archivo:', (this.archivoSeleccionado.size / 1024).toFixed(2), 'KB');
-    }else{
-        console.log('No hay archivo');
+        console.log('Arreglo: '+this.arregloArchivos);
+        console.log('Tamaño del arreglo: '+this.arregloArchivos.length);
     }
   }
+
   //Envío del archivo
   onSubmit() {
-    if (this.archivoSeleccionado) {
+    console.log('voy a enviar el archivo');
+
+    if (this.archivoSeleccionado !== null) {
       this.actualizarService.uploadFile(this.archivoSeleccionado).subscribe(
         (respuesta) => {
           console.log('Archivo subido exitosamente', respuesta);
         },
-        (error: HttpErrorResponse) => {
+        (error) => {
           console.error('Error al subir el archivo', error);
         }
       );
@@ -48,4 +53,6 @@ export class ActualizarComponent implements OnInit {
       console.warn('No se ha seleccionado ningún archivo.');
     }
   }
+
+
 }

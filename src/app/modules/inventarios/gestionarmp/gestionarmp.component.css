@@ -1,0 +1,94 @@
+*{
+    font-family: "Helvetica Neue", sans-serif;
+}
+.c{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 30%;
+}
+.caja{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(111, 141, 196);
+    width: 100%;
+}
+.titulo{
+    font-size: 30px;
+    font-weight: 600;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    margin-top: 20px;
+}
+a{
+    font-weight: 500;
+    color: white;
+    align-items: center;
+    border-bottom: 1px solid black;
+    margin-left: 5px;
+    margin-top: 10px;
+}
+.contenedor-formulario{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: aliceblue;
+}
+.contenedores{
+    width: 90%;
+    background-color: rgb(111, 141, 196);
+}
+.contiene{
+    display: flex;
+    flex-direction: row;
+}
+.contenedor-uno{
+    display: flex;
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    margin-right: 2px;
+}
+.contenedor-dos{
+    display: flex;
+    width: 50%;
+    margin-left: 20px;
+}
+label{
+    margin-top: 5px;
+    font-weight: 700;
+}
+input{
+    text-align: center;
+    width: 90%;
+    margin-bottom: 10px;
+}
+.botones{
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    }
+.boton-uno{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+}
+.boton-dos{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+
+}
+
+
+
+
+
+
+

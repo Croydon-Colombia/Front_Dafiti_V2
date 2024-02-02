@@ -385,6 +385,8 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             // Llama al servicio para procesar las órdenes seleccionadas
             this.salesApi.processSales(selectedOrders).subscribe(response => {
                 console.log('Órdenes reprocesadas:', response);
+
+                alert('Órdenes reprocesadas: ' +selectedOrders.length+ ' de '+ selectedOrders.length);
             });
         } else {
             // Si no hay órdenes seleccionadas, muestra el mensaje
