@@ -18,7 +18,7 @@ export class PaymentsService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.get(this.apiUrl + 'PaymentsFile/download', {
+    return this.http.get(this.apiUrl + 'PaymentsFile/downloadReport', {
       headers: headers,
       responseType: 'blob',
       observe: 'response'
@@ -28,7 +28,7 @@ export class PaymentsService {
   //descargar archivo de pagos por números de pedidos
     downloadPaymentsFileByOrdersNumbers(ordersNumbers : string[]): Observable<HttpResponse<Blob>>{
 
-      return this.http.post(this.apiUrl + 'ListOrders/getPaymentFileByOrderNumbers', ordersNumbers, {
+      return this.http.post(this.apiUrl + 'PaymentsFile/downloadReportSlect', ordersNumbers, {
         //headers: headers,
         responseType: 'blob',
         observe: 'response'

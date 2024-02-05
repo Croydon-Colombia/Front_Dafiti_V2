@@ -386,11 +386,20 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             this.salesApi.processSales(selectedOrders).subscribe(response => {
                 console.log('Órdenes reprocesadas:', response);
 
-                alert('Órdenes reprocesadas: ' +selectedOrders.length+ ' de '+ selectedOrders.length);
+            // Verifica si la respuesta contiene información sobre las órdenes procesadas
+            if (response && response.hasOwnProperty('ordersProcessed')) {
+                const ordersProcessed = response.ordersProcessed;
+                alert('Órdenes reprocesadas: ' + ordersProcessed.length + ' de ' + selectedOrders.length);
+            } else {
+                // Manejar el caso en el que no hay información sobre las órdenes procesadas en la respuesta
+                alert('No se pudo obtener información sobre las órdenes reprocesadas, validar información.');
+            }
+                //alert('Órdenes reprocesadas: ' +selectedOrders.length+ ' de '+ selectedOrders.length);
             });
         } else {
             // Si no hay órdenes seleccionadas, muestra el mensaje
             console.log('No hay órdenes seleccionadas');
+            alert('No hay órdenes seleccionadas');
         }
     }
 
