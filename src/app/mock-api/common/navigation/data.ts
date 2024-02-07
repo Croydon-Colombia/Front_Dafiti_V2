@@ -46,6 +46,44 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 ]
             }
         ]
+    },
+    {
+        id      : 'inventarios',
+        title   : 'Inventarios',
+        subtitle: 'Informacion general',
+        type    : 'group',
+        icon    : 'heroicons_outline:database',
+        children: [
+            {
+                id      : 'inventarios.inf',
+                title   : 'Inventarios',
+                type    : 'collapsable',
+                icon    : 'heroicons_outline:database',
+                children: [
+                    {
+                        id   : 'inventarios.inf.actualizar',
+                        title: 'Actualizar referencia',
+                        type : 'basic',
+                        icon    : 'heroicons_outline:database',
+                        link : '/inventarios/actualizar'
+                    },
+                    {
+                        id   : 'inventarios.inf.administrar',
+                        title: 'Administración',
+                        type : 'basic',
+                        icon    : 'heroicons_outline:database',
+                        link : '/inventarios/administrar'
+                    },
+                    {
+                        id   : 'inventarios.inf.gestionar',
+                        title: 'Gestionar MP',
+                        type : 'basic',
+                        icon    : 'heroicons_outline:database',
+                        link : '/inventarios/gestionar'
+                    }
+                ]
+            }
+        ]
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [
