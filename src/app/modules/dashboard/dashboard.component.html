@@ -87,8 +87,8 @@
                 </div>
 
                 <div class="col-md-4">
-                <!--Botón que al hacer click en el checkbox cambia el nombre del botón-->
-                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button >
+                <!--Botón que al hacer click en el checkbox cambia el nombre del botón: Reprocesar pedidos fallidos a Reprocesar pedidos seleccionados-->
+                <button [color]="'primary'" class="hidden sm:inline-flex ml-3" mat-flat-button (click)="reprocesarTodas()" >
                     <mat-icon [svgIcon]="'heroicons_solid:save'" class="icon-size-5"></mat-icon>
                     <span class="ml-2"> {{nombreBoton}} </span>
                 </button>

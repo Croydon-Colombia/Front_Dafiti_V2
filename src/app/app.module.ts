@@ -14,6 +14,10 @@ import { appRoutes } from 'app/app.routing';
 import { DafitiCrossdockingComponent } from './modules/dafiti/crossdocking/dafiti.crossdocking.component';
 import { CustomSnackbarComponent } from './modules/custom-snackbar/custom-snackbar.component';
 import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { AdministracionComponent } from './modules/inventarios/administracion/administracion.component';
+import { ActualizarComponent } from './modules/inventarios/actualizar/actualizar.component';
+import { GestionarmpComponent } from './modules/inventarios/gestionarmp/gestionarmp.component';
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
     scrollPositionRestoration: 'enabled'
@@ -24,6 +28,9 @@ const routerConfig: ExtraOptions = {
         AppComponent,
         DafitiCrossdockingComponent,
         CustomSnackbarComponent,
+        AdministracionComponent,
+        ActualizarComponent,
+        GestionarmpComponent
     ],
     imports     : [
         BrowserModule,
@@ -40,7 +47,8 @@ const routerConfig: ExtraOptions = {
 
         // Layout module of your application
         LayoutModule,
-        MatIconModule
+        MatIconModule,
+        CommonModule
     ],
     bootstrap   : [
         AppComponent

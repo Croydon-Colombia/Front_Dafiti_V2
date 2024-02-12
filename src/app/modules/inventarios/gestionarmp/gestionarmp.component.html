@@ -1,0 +1,114 @@
+
+<!-- Menú lateral -->
+<div class="c">
+    <div class="caja" >
+        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Dafiti')" >
+            <div class="container-fluid" >
+                <a class="navbar-brand" [routerLink]="['/inventarios/gestionar']">Dafiti</a>
+                <mat-icon [svgIcon]="'heroicons_solid:arrow-right'" class="icon-size-5" ></mat-icon>
+            </div>
+        </nav>
+        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Exito')">
+            <div class="container-fluid" >
+            <a class="navbar-brand" [routerLink]="['/inventarios/gestionar']" >Exito</a>
+            <mat-icon [svgIcon]="'heroicons_solid:arrow-right'" class="icon-size-5"></mat-icon>
+            </div>
+        </nav>
+        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Falabella')">
+            <div class="container-fluid">
+            <a class="navbar-brand" [routerLink]="['/inventarios/gestionar']">Falabella</a>
+            <mat-icon [svgIcon]="'heroicons_solid:arrow-right'" class="icon-size-5"></mat-icon>
+            </div>
+        </nav>
+        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Linio')">
+            <div class="container-fluid" >
+            <a class="navbar-brand" [routerLink]="['/inventarios/gestionar']">Linio</a>
+            <mat-icon [svgIcon]="'heroicons_solid:arrow-right'" class="icon-size-5"></mat-icon>
+            </div>
+        </nav>
+        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Mercado Libre')">
+            <div class="container-fluid">
+            <a class="navbar-brand" [routerLink]="['/inventarios/gestionar']">Mercado Libre</a>
+            <mat-icon [svgIcon]="'heroicons_solid:arrow-right'" class="icon-size-5"></mat-icon>
+            </div>
+        </nav>
+        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Mercado Shop')">
+            <div class="container-fluid" >
+            <a class="navbar-brand" [routerLink]="['/inventarios/gestionar']">Mercado Shop</a>
+            <mat-icon [svgIcon]="'heroicons_solid:arrow-right'" class="icon-size-5"></mat-icon>
+            </div>
+        </nav>
+    </div>
+</div>
+
+
+<div class="contenedor-formulario" *ngIf="mostrar && opcionSeleccionada" >
+    <div class="titulo" >
+        <p>{{ opcionSeleccionada }}</p>
+    </div>
+    <div class="contenedores" *ngFor="let dato of datos">
+        <form *ngIf="opcionSeleccionada === dato.name" >
+                <div class="contiene">
+                    <div class="contenedor-uno">
+                        <label for="descripcion" class="form-label">Marketplace Pk</label>
+                    </div>
+                    <div class="contenedor-uno">
+                        <label for="descripcion" class="form-label">Yuju PK</label>
+                    </div>
+                </div>
+                <div class="contiene">
+                    <div class="contenedor-dos">
+                        <input type="text" class="form-control" id="apellido" placeholder="{{ dato.marketplacePk }}">
+                    </div>
+                    <div class="contenedor-dos">
+                        <input type="text" class="form-control" id="apellido" placeholder="{{ dato.shopYujuPk }}">
+                    </div>
+                </div>
+                <div class="contiene">
+                    <div class="contenedor-uno">
+                        <label for="descripcion" class="form-label">Nombre</label>
+                    </div>
+                    <div class="contenedor-uno">
+                        <label for="descripcion" class="form-label">Status</label>
+                    </div>
+                </div>
+                <div class="contiene">
+                    <div class="contenedor-dos">
+                        <input type="text" class="form-control" id="apellido" placeholder="{{ dato.name }}">
+                    </div>
+                    <div class="contenedor-dos">
+                        <input type="text" class="form-control" id="apellido" placeholder="{{ dato.status }}">
+                    </div>
+                </div>
+                <div class="contiene">
+                    <div class="contenedor-uno">
+                        <label for="descripcion" class="form-label">Prioridad</label>
+                    </div>
+                    <div class="contenedor-uno">
+                        <label for="descripcion" class="form-label">Marketplace Id</label>
+                    </div>
+                </div>
+                <div class="contiene">
+                    <div class="contenedor-dos">
+                        <input type="text" class="form-control" id="apellido" placeholder="{{ dato.priority }}">
+                    </div>
+                    <div class="contenedor-dos">
+                        <input type="text" class="form-control" id="apellido" placeholder="{{ dato.stringId }}">
+                    </div>
+                </div>
+        </form>
+
+    </div>
+    <div class="botones">
+        <div class="boton-uno">
+        <button  class="btn btn-primary">Editar</button>
+        </div>
+        <div class="boton-dos">
+        <button  class="btn btn-primary">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!--<button (click)="mostrar= !mostrar" class="btn btn-primary">Mostrar/Ocultar</button>-->
+
+
