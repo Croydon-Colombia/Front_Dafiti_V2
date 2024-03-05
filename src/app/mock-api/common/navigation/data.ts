@@ -29,13 +29,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                         icon    : 'heroicons_outline:shopping-cart',
                         link : '/dafiti/orders'
                     },
-                    {
+                    /*{
                         id   : 'dafiti.inf.tracking',
                         title: 'Guias',
                         type : 'basic',
                         icon    : 'heroicons_outline:shopping-cart',
                         link : '/dafiti/tracking'
-                    },
+                    },*/
                     {
                         id   : 'dafiti.inf.crossdocking',
                         title: 'Crossdocking',
