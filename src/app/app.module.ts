@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { AdministracionComponent } from './modules/inventarios/administracion/administracion.component';
 import { ActualizarComponent } from './modules/inventarios/actualizar/actualizar.component';
 import { GestionarmpComponent } from './modules/inventarios/gestionarmp/gestionarmp.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
     scrollPositionRestoration: 'enabled'
