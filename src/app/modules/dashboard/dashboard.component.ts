@@ -29,6 +29,7 @@ import { MatTableDataSourcePaginator } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import { ERPProccess } from 'app/Models/erp-proccess';
+import { FormularioComponent } from './formulario/formulario.component';
 
 @Component({
     selector: 'dashboard',
@@ -120,6 +121,19 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         private salesApi: SalesApi, private trackingSertvice: TrackingSertvice, private snackBar: MatSnackBar,
         private paymentsService: PaymentsService, private orderApi: SalesApi,
         public dialog: MatDialog) {
+    }
+
+
+    abrirFormulario(orderNumber: string):void{
+        console.log('Número de orden seleccionada: '+ orderNumber);
+
+        const dialogRef = this.dialog.open(FormularioComponent, {
+            width: '800px',
+            height: '600px',
+            disableClose: false,
+            data: { orderNumber: orderNumber },
+            closeOnNavigation: true,
+          });
     }
 
     //obtener los datos seleccionados

@@ -1,0 +1,59 @@
+<div class="container mt-3">
+    <form>
+        <fieldset>
+            <legend>Datos Personales</legend>
+            <div class="form-row">
+                <div class="form-group col">
+                    <label class="form-label" for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" [disabled]="true">
+                </div>
+                <div class="form-group col">
+                    <label class="form-label" for="apellido">Apellido:</label>
+                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="" [disabled]="true" >
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col">
+                    <label class="form-label" for="cedula">Cédula:</label>
+                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="" >
+                </div>
+                <div class="form-group col">
+                    <label class="form-label" for="direccion">Dirección:</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" placeholder="" >
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Detalle</legend>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label class="form-label" for="sku">SKU:</label>
+                    <input type="text" class="form-control" id="sku" name="sku" placeholder="" >
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label class="form-label" for="cantidad">Cantidad:</label>
+                    <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="" [disabled]="true" >
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label class="form-label" for="valor">Valor Unitario:</label>
+                    <input type="text" class="form-control" id="valor" name="valor" placeholder="" [disabled]="true" >
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="form-row">
+            <div class="form-group col-6">
+                <button class="btn btn-primary mt-3" >Guardar</button>
+            </div>
+            <div class="form-group col-6">
+                <button class="btn btn-danger mt-3">Cerrar</button>
+            </div>
+        </div>
+
+    </form>
+</div>

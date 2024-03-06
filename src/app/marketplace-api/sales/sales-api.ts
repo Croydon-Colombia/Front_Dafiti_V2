@@ -51,7 +51,7 @@ import { BehaviorSubject, Observable, forkJoin, of, switchMap, tap} from 'rxjs';
         const body = {
             orders
         }
-    
+
         return of(null).pipe(
             switchMap(() => this.http.post(this.baseUri+'MassiveRequest/ReprocessOrderNotSucces',orders,{ responseType: 'text'}))
         );
