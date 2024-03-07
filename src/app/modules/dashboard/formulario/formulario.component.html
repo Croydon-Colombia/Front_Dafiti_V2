@@ -5,46 +5,47 @@
             <div class="form-row">
                 <div class="form-group col">
                     <label class="form-label" for="nombre">Nombre:</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" [disabled]="true">
+                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" [disabled]="true" [(ngModel)]="order.orderCustomers.customerFirstName">
                 </div>
                 <div class="form-group col">
                     <label class="form-label" for="apellido">Apellido:</label>
-                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="" [disabled]="true" >
+                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="" [disabled]="true" [(ngModel)]="order.orderCustomers.customerLastName">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">
                     <label class="form-label" for="cedula">Cédula:</label>
-                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="" >
+                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="" [(ngModel)]="order.orderCustomers.customerRegNumber" >
                 </div>
                 <div class="form-group col">
                     <label class="form-label" for="direccion">Dirección:</label>
-                    <input type="text" class="form-control" id="direccion" name="direccion" placeholder="" >
+                    <input type="text" class="form-control" id="direccion" name="direccion" placeholder="" [(ngModel)]="order.orderCustomers.orderAddressShipping.addressLine">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6">
+                    <label class="form-label" for="total">Valor Total:</label>
+                    <input type="text" class="form-control" id="total" name="total" placeholder="" [disabled]="true" [(ngModel)]="order.orderTotalPrice" >
                 </div>
             </div>
         </fieldset>
 
-        <fieldset>
-            <legend>Detalle</legend>
-            <div class="form-row">
-                <div class="form-group col-6">
-                    <label class="form-label" for="sku">SKU:</label>
-                    <input type="text" class="form-control" id="sku" name="sku" placeholder="" >
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-6">
-                    <label class="form-label" for="cantidad">Cantidad:</label>
-                    <input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="" [disabled]="true" >
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-6">
-                    <label class="form-label" for="valor">Valor Unitario:</label>
-                    <input type="text" class="form-control" id="valor" name="valor" placeholder="" [disabled]="true" >
-                </div>
-            </div>
-        </fieldset>
+        <table class="table">
+            <thead class="thead-dark text-center">
+                <tr>
+                    <th>SKU</th>
+                    <th>CANTIDAD</th>
+                    <th>VALOR UNITARIO</th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr *ngFor="let item of order.orderItems">
+                    <td><input type="text" class="form-control" id="sku" name="sku" placeholder="" [(ngModel)]="item.itemSku"></td>
+                    <td><input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="" [disabled]="true" [(ngModel)]="item.itemQty"></td>
+                    <td><input type="text" class="form-control" id="valor" name="valor" placeholder="" [disabled]="true" [(ngModel)]="item.itemUnitPrice"></td>
+                </tr>
+            </tbody>
+        </table>
 
         <div class="form-row">
             <div class="form-group col-6">
@@ -54,6 +55,5 @@
                 <button class="btn btn-danger mt-3">Cerrar</button>
             </div>
         </div>
-
     </form>
 </div>

@@ -2,19 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrackingSertvice {
-  private apiUrl = 'http://192.168.0.177:7071/api/';
+    private baseUri = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
   // Método para hacer la solicitud en segundo plano
   downloadTrackingPendings(): Observable<any> {
     return of(null).pipe(
-        switchMap(() => this.http.put(this.apiUrl + 'PendingTracking/DownloadPendingGuides', null, { responseType: 'text' }))
+        switchMap(() => this.http.put(this.baseUri + 'PendingTracking/DownloadPendingGuides', null, { responseType: 'text' }))
     );
   }
 
@@ -25,7 +26,7 @@ export class TrackingSertvice {
     }
 
     return of(null).pipe(
-        switchMap(() => this.http.post(this.apiUrl+'PendingTracking/DownloadPendingGuidesByOrdersNumbers',orderNumbers,{ responseType: 'text'}))
+        switchMap(() => this.http.post(this.baseUri+'PendingTracking/DownloadPendingGuidesByOrdersNumbers',orderNumbers,{ responseType: 'text'}))
     );
   }
 

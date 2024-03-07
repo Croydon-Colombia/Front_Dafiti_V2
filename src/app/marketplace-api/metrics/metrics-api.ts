@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable} from "@angular/core";
 import { Metric } from 'app/Models/metrics-mp';
+import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable, tap} from 'rxjs';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { BehaviorSubject, Observable, tap} from 'rxjs';
   export class MetricsService{
 
     private _data: BehaviorSubject<Metric[]> = new BehaviorSubject(null);
-    private baseUri = 'http://192.168.0.177:7071/api/';
+    private baseUri = environment.apiUrl;
 
     constructor(private http: HttpClient) {}
 

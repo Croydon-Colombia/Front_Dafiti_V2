@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable} from "@angular/core";
 import { Order } from 'app/Models/order';
+import { environment } from 'environments/environment';
 import { BehaviorSubject, Observable, forkJoin, of, switchMap, tap} from 'rxjs';
 
 @Injectable({
@@ -11,7 +12,7 @@ import { BehaviorSubject, Observable, forkJoin, of, switchMap, tap} from 'rxjs';
   export class SalesApi{
 
     private _data: BehaviorSubject<Order[]> = new BehaviorSubject(null);
-    private baseUri = 'http://192.168.0.177:7071/api/';
+    private baseUri = environment.apiUrl;
 
     constructor(private http: HttpClient) {}
 
