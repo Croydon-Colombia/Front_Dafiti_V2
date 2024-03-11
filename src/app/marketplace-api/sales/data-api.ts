@@ -20,6 +20,7 @@ export class DataService {
 
 
     updateOrden(order:OrderDetail): Observable<OrderDetail>{
+        console.log('Ingresando al servicio de guardar');
         return this.http.post<OrderDetail>(this.baseUri+'Orders/UpdateOrder', order);
       }
 

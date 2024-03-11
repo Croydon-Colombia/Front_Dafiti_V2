@@ -1,31 +1,80 @@
 <div class="container mt-3">
-    <form>
+    <form (ngSubmit)="guardarOrden(forma)" #forma="ngForm">
         <fieldset>
             <legend>Datos Personales</legend>
             <div class="form-row">
                 <div class="form-group col">
                     <label class="form-label" for="nombre">Nombre:</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" placeholder="" [disabled]="true" [(ngModel)]="order.orderCustomers.customerFirstName">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        placeholder=""
+                        [disabled]="true"
+                        name="nombre"
+                        [(ngModel)]="order.orderCustomers.customerFirstName"
+                    />
                 </div>
                 <div class="form-group col">
                     <label class="form-label" for="apellido">Apellido:</label>
-                    <input type="text" class="form-control" id="apellido" name="apellido" placeholder="" [disabled]="true" [(ngModel)]="order.orderCustomers.customerLastName">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="apellido"
+                        placeholder=""
+                        [disabled]="true"
+                        name="apellido"
+                        [(ngModel)]="order.orderCustomers.customerLastName"
+                    />
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col">
                     <label class="form-label" for="cedula">Cédula:</label>
-                    <input type="text" class="form-control" id="cedula" name="cedula" placeholder="" [(ngModel)]="order.orderCustomers.customerRegNumber" >
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="cedula"
+                        placeholder=""
+                        name="cedula"
+                        [(ngModel)]="order.orderCustomers.customerRegNumber"
+                        required
+                        maxlength="10"
+                        #cedula="ngModel"
+                        [class.is-invalid]="cedula.invalid && cedula.touched"
+                    />
+                    <small *ngIf="cedula.invalid && cedula.touched"
+                            class="form-text text-danger">La cédula es obligatoria, máximo 10 valores</small>
                 </div>
                 <div class="form-group col">
                     <label class="form-label" for="direccion">Dirección:</label>
-                    <input type="text" class="form-control" id="direccion" name="direccion" placeholder="" [(ngModel)]="order.orderCustomers.orderAddressShipping.addressLine">
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="direccion"
+                        placeholder=""
+                        name="direccion"
+                        [(ngModel)]="order.orderCustomers.orderAddressShipping.addressLine"
+                        required
+                        #direccion="ngModel"
+                        [class.is-invalid]="direccion.invalid && direccion.touched"
+                    />
+                    <small *ngIf="direccion.invalid && direccion.touched"
+                            class="form-text text-danger">La dirección es obligatoria</small>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-6">
                     <label class="form-label" for="total">Valor Total:</label>
-                    <input type="text" class="form-control" id="total" name="total" placeholder="" [disabled]="true" [(ngModel)]="order.orderTotalPrice" >
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="total"
+                        placeholder=""
+                        [disabled]="true"
+                        name="total"
+                        [(ngModel)]="order.orderTotalPrice"
+                    />
                 </div>
             </div>
         </fieldset>
@@ -38,21 +87,58 @@
                     <th>VALOR UNITARIO</th>
                 </tr>
             </thead>
-            <tbody >
-                <tr *ngFor="let item of order.orderItems">
-                    <td><input type="text" class="form-control" id="sku" name="sku" placeholder="" [(ngModel)]="item.itemSku"></td>
-                    <td><input type="text" class="form-control" id="cantidad" name="cantidad" placeholder="" [disabled]="true" [(ngModel)]="item.itemQty"></td>
-                    <td><input type="text" class="form-control" id="valor" name="valor" placeholder="" [disabled]="true" [(ngModel)]="item.itemUnitPrice"></td>
+            <tbody>
+                <tr *ngFor="let item of order.orderItems; let i = index">
+                    <td>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="sku_{{i}}"
+                            placeholder=""
+                            name="sku_{{i}}"
+                            [(ngModel)]="item.itemSku"
+                            required
+                            #sku="ngModel"
+                            [class.is-invalid]="sku.invalid && sku.touched"
+                        />
+                        <small *ngIf="sku.invalid && sku.touched"
+                                class="form-text text-danger">Este dato es obligatorio</small>
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="cantidad_{{i}}"
+                            placeholder=""
+                            [disabled]="true"
+                            name="cantidad_{{i}}"
+                            [(ngModel)]="item.itemQty"
+                        />
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="valor_{{i}}"
+                            placeholder=""
+                            [disabled]="true"
+                            name="valor_{{i}}"
+                            [(ngModel)]="item.itemUnitPrice"
+                        />
+                    </td>
                 </tr>
             </tbody>
         </table>
 
         <div class="form-row">
             <div class="form-group col-6">
-                <button class="btn btn-primary mt-3" (click)="guardarOrden()">Guardar</button>
+                <button
+                class="btn btn-primary mt-3">
+                    Guardar
+                </button>
             </div>
             <div class="form-group col-6">
-                <button class="btn btn-danger mt-3">Cerrar</button>
+                <button class="btn btn-danger mt-3" (click)="cerrarModal()">Cerrar</button>
             </div>
         </div>
     </form>

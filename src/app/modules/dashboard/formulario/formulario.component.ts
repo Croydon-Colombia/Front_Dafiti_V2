@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { OrderDetail } from 'app/Models/order-not-processed/order-detail';
 import { DataService } from 'app/marketplace-api/sales/data-api';
@@ -37,6 +38,7 @@ export class FormularioComponent implements OnInit {
                     console.log('SKU: ' + item.itemSku);
                     console.log('Cantidad: ' + item.itemQty);
                     console.log('Valor Unitario: ' + item.itemUnitPrice);
+                    console.log('Itemid: ' + item.itemId);
                 });
             }else{
                 console.log('No se encontraron detalles para la orden con el número: ' + orderNumber);
@@ -47,7 +49,20 @@ export class FormularioComponent implements OnInit {
     }
 
 
-    guardarOrden(): void {
+    guardarOrden(forma: NgForm): void {
+        console.log('Clic al botón GUARDAR')
+        console.log(forma);
+        console.log(forma.value);
+
+        //Verifica si el formulario tiene algun campo incompleto
+        if(forma.invalid){
+            Object.values(forma.controls).forEach( control => {
+                control.markAsTouched();
+            });
+            return;
+        }
+
+        //Actualizar la orden
         if (this.order) {
             this.dataService.updateOrden(this.order).subscribe( response => {
                 console.log('orden actualizada con éxito', response);
@@ -58,9 +73,9 @@ export class FormularioComponent implements OnInit {
         }
     }
 
-    /*cerrarModal(): void {
+    cerrarModal(): void {
         this.dialogRef.close();
-      }*/
+      }
 
 
 
