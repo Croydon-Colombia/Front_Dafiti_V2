@@ -67,6 +67,7 @@ export class FormularioComponent implements OnInit {
             this.dataService.updateOrden(this.order).subscribe( response => {
                 console.log('orden actualizada con éxito', response);
                 alert('Orden actualizada con éxito');
+                this.cerrarModal();
             });
         } else {
             console.error('No se puede guardar la orden porque no hay datos.');
