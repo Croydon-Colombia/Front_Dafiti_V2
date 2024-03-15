@@ -15,7 +15,7 @@ export class FormularioComponent implements OnInit {
 
     constructor(private dataService:DataService,
         private dialogRef: MatDialogRef<FormularioComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any){
+        @Inject(MAT_DIALOG_DATA) public data: any){
     }
 
     ngOnInit(): void {
@@ -50,7 +50,7 @@ export class FormularioComponent implements OnInit {
 
 
     guardarOrden(forma: NgForm): void {
-        console.log('Clic al botón GUARDAR')
+        console.log('Clic al botón GUARDAR');
         console.log(forma);
         console.log(forma.value);
 
@@ -65,9 +65,11 @@ export class FormularioComponent implements OnInit {
         //Actualizar la orden
         if (this.order) {
             this.dataService.updateOrden(this.order).subscribe( response => {
-                console.log('orden actualizada con éxito', response);
-                alert('Orden actualizada con éxito');
+                this.order = response;
+                alert('Orden actualizada con éxito!');
                 this.cerrarModal();
+                //Recargar la página después de la actualización
+                window.location.reload();
             });
         } else {
             console.error('No se puede guardar la orden porque no hay datos.');
