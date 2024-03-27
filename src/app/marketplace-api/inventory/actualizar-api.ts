@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActualizarService {
 
+    //private baseUri = environment.apiUrl + '';
     private apiUrl = 'http://192.168.0.177:8041/api/InventoryFile';
 
     constructor(private http: HttpClient) { }

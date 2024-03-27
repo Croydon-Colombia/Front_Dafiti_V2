@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { List } from 'lodash';
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class PaymentsService {
-  private apiUrl = 'http://192.168.0.177:7071/api/';
+    private baseUri = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -18,7 +19,7 @@ export class PaymentsService {
       'Content-Type': 'application/json',
     });
 
-    return this.http.get(this.apiUrl + 'PaymentsFile/downloadReport', {
+    return this.http.get(this.baseUri + 'PaymentsFile/downloadReport', {
       headers: headers,
       responseType: 'blob',
       observe: 'response'
@@ -28,7 +29,7 @@ export class PaymentsService {
   //descargar archivo de pagos por números de pedidos
     downloadPaymentsFileByOrdersNumbers(ordersNumbers : string[]): Observable<HttpResponse<Blob>>{
 
-      return this.http.post(this.apiUrl + 'PaymentsFile/downloadReportSlect', ordersNumbers, {
+      return this.http.post(this.baseUri + 'PaymentsFile/downloadReportSlect', ordersNumbers, {
         //headers: headers,
         responseType: 'blob',
         observe: 'response'
