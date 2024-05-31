@@ -9,13 +9,13 @@ import { InventoryMp } from 'app/Models/inventory-mp';
 })
 export class GestionarService {
 
-    private apiUrl='http://192.168.0.177:8041/api/MarketPlace/GetAllMarketPlace';
+    private apiUrl='http://192.168.0.97:8089/api/MarketPlace/GetAllMarketPlace';
 
     constructor(private http:HttpClient) { }
 
     get():Observable<InventoryMp[]>{
+        console.log('Entrado al servicio para mostrar datos de MP');
     return this.http.get<InventoryMp[]>(this.apiUrl);
-
-}
+    }
 
 }

@@ -2,7 +2,7 @@ export interface InventoryMp {
     marketplacePk: number
     shopYujuPk: number
     name: string
-    status: number
+    status: boolean
     priority: number
     stringId: string
     createtAt?: string
