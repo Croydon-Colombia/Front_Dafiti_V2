@@ -8,11 +8,12 @@ import { InventoryParameters } from 'app/Models/inventory-parameters';
 })
 export class AdministrarService {
 
-    private apiUrl='http://192.168.0.177:8041/api/Parameters/GetAllParameters';
+    private apiUrl='http://192.168.0.97:8089/api/Parameters/GetAllParameters';
 
     constructor(private http:HttpClient) { }
 
     get():Observable<InventoryParameters[]>{
+        console.log('Entrando al servicio para ver los parametros');
     return this.http.get<InventoryParameters[]>(this.apiUrl);
 
 }

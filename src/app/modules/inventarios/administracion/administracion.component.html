@@ -1,25 +1,23 @@
-<div class="contenedor-formulario">
-    <div class="titulo">
-        <p>Parámetros de inventario</p>
-    </div>
-    <div class="titulos">
-        <div class="titulo-uno">
-            <p>Descripción</p>
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Parámetros de inventario</h4>
         </div>
-        <div class="titulo-dos">
-            <p>Valor</p>
-        </div>
-    </div>
-    <div class="contenedores" *ngFor="let dato of datos">
-        <form>
-            <div class="contiene">
-                <div class="contenedor-uno">
-                    <label for="descripcion" class="form-label">{{ dato.description }}</label>
-                </div>
-                <div class="contenedor-dos">
-                    <input type="text" class="form-control" id="apellido" placeholder="{{ dato.valKey }}">
-                </div>
+        <div class="card-body">
+            <div class="row font-weight-bold mb-3 text-center">
+                <div class="col-md-4">Descripción</div>
+                <div class="col-md-8">Valor</div>
             </div>
-        </form>
+            <div *ngFor="let dato of parametros">
+                <form>
+                    <div class="form-group row align-items-center">
+                        <label for="descripcion-{{ dato.valKey }}" class="col-md-4 col-form-label">{{ dato.description }}</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="descripcion-{{ dato.valKey }}" placeholder="{{ dato.valKey }}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
