@@ -41,5 +41,9 @@ export class GestionarmpComponent implements OnInit {
     console.log('Mostrar: '+this.mostrar);
   }
 
+  cancelar(){
+    this.opcionSeleccionada = null;
+    this.mostrar = false;
+  }
 
 }
