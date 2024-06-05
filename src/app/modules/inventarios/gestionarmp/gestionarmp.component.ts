@@ -20,7 +20,10 @@ export class GestionarmpComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.mostrarMp();
+  }
 
+  mostrarMp(){
     this.gestionarService.get().subscribe( data => {
         this.marketplaces = data;
 
