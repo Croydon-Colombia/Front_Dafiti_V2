@@ -23,6 +23,13 @@ export class GestionarmpComponent implements OnInit {
     this.mostrarMp();
   }
 
+  mostrarDatos(opcion: string){
+    this.opcionSeleccionada = opcion;
+    this.mostrar = true;
+    console.log('opcion seleccionada: '+this.opcionSeleccionada);
+    console.log('Mostrar: '+this.mostrar);
+  }
+
   mostrarMp(){
     this.gestionarService.get().subscribe( data => {
         this.marketplaces = data;
@@ -34,11 +41,28 @@ export class GestionarmpComponent implements OnInit {
     })
   }
 
-  mostrarDatos(opcion: string){
-    this.opcionSeleccionada = opcion;
-    this.mostrar = true;
-    console.log('opcion seleccionada: '+this.opcionSeleccionada);
-    console.log('Mostrar: '+this.mostrar);
+  updateMp(marketplace: InventoryMp) {
+    if (!marketplace.name || marketplace.status === undefined || !marketplace.priority || !marketplace.stringId) {
+        console.error('Datos inválidos:', marketplace);
+        alert('Todos los campos deben estar llenos');
+        return;
+      }
+
+    const updateData = {
+      name: marketplace.name,
+      status: !!marketplace.status,
+      priority: marketplace.priority,
+      stringId: marketplace.stringId,
+      updateAt: new Date().toISOString()
+    };
+    console.log('Datos enviados para actualizar:', updateData);
+    this.gestionarService.updateMp([{...marketplace, ...updateData}]).subscribe(() => {
+      alert(`Marketplace Pk ${marketplace.marketplacePk} actualizado`);
+      window.location.reload();
+      this.mostrarMp();
+    }, error => {
+      console.error('Error actualizando los datos: ', error);
+    });
   }
 
   cancelar(){
