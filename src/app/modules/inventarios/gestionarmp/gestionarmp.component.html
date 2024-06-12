@@ -1,207 +1,4 @@
 <!-- Menú lateral -->
-<!--<div class="c">
-    <div class="caja">
-        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Dafiti')">
-            <div class="container-fluid">
-                <a class="navbar-brand" [routerLink]="['/inventarios/gestionar']">Dafiti</a>
-                <mat-icon
-                    [svgIcon]="'heroicons_solid:arrow-right'"
-                    class="icon-size-5"
-                ></mat-icon>
-            </div>
-        </nav>
-        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Exito')">
-            <div class="container-fluid">
-                <a
-                    class="navbar-brand"
-                    [routerLink]="['/inventarios/gestionar']"
-                    >Exito</a
-                >
-                <mat-icon
-                    [svgIcon]="'heroicons_solid:arrow-right'"
-                    class="icon-size-5"
-                ></mat-icon>
-            </div>
-        </nav>
-        <nav
-            class="navbar bg-body-tertiary"
-            (click)="mostrarDatos('Falabella')"
-        >
-            <div class="container-fluid">
-                <a
-                    class="navbar-brand"
-                    [routerLink]="['/inventarios/gestionar']"
-                    >Falabella</a
-                >
-                <mat-icon
-                    [svgIcon]="'heroicons_solid:arrow-right'"
-                    class="icon-size-5"
-                ></mat-icon>
-            </div>
-        </nav>
-        <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Linio')">
-            <div class="container-fluid">
-                <a
-                    class="navbar-brand"
-                    [routerLink]="['/inventarios/gestionar']"
-                    >Linio</a
-                >
-                <mat-icon
-                    [svgIcon]="'heroicons_solid:arrow-right'"
-                    class="icon-size-5"
-                ></mat-icon>
-            </div>
-        </nav>
-        <nav
-            class="navbar bg-body-tertiary"
-            (click)="mostrarDatos('Mercado Libre')"
-        >
-            <div class="container-fluid">
-                <a
-                    class="navbar-brand"
-                    [routerLink]="['/inventarios/gestionar']"
-                    >Mercado Libre</a
-                >
-                <mat-icon
-                    [svgIcon]="'heroicons_solid:arrow-right'"
-                    class="icon-size-5"
-                ></mat-icon>
-            </div>
-        </nav>
-        <nav
-            class="navbar bg-body-tertiary"
-            (click)="mostrarDatos('Mercado Shop')"
-        >
-            <div class="container-fluid">
-                <a
-                    class="navbar-brand"
-                    [routerLink]="['/inventarios/gestionar']"
-                    >Mercado Shop</a
-                >
-                <mat-icon
-                    [svgIcon]="'heroicons_solid:arrow-right'"
-                    class="icon-size-5"
-                ></mat-icon>
-            </div>
-        </nav>
-    </div>
-</div>
-
-<div class="contenedor-formulario" *ngIf="mostrar && opcionSeleccionada">
-    <div class="titulo">
-        <p>{{ opcionSeleccionada }}</p>
-    </div>
-    <div class="contenedores" *ngFor="let marketplace of marketplaces">
-        <form
-            *ngIf="opcionSeleccionada === marketplace.name"
-        >
-            <div class="contiene">
-                <div class="contenedor-uno">
-                    <label for="marketplacePk" class="form-label">Marketplace Pk</label>
-                </div>
-                <div class="contenedor-uno">
-                    <label for="shopYujuPk" class="form-label">Yuju PK</label>
-                </div>
-            </div>
-            <div class="contiene">
-                <div class="contenedor-dos">
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="marketplacePk"
-                        [(ngModel)]="marketplace.marketplacePk"
-                        name="marketplacePk"
-                        required
-                    />
-                </div>
-                <div class="contenedor-dos">
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="shopYujuPk"
-                        [(ngModel)]="marketplace.shopYujuPk"
-                        name="shopYujuPk"
-                        required
-                    />
-                </div>
-            </div>
-            <div class="contiene">
-                <div class="contenedor-uno">
-                    <label for="name" class="form-label">Nombre</label>
-                </div>
-                <div class="contenedor-uno">
-                    <label for="status" class="form-label">Status</label>
-                </div>
-            </div>
-            <div class="contiene">
-                <div class="contenedor-dos">
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="name"
-                        [(ngModel)]="marketplace.name"
-                        name="name"
-                        required
-                    />
-                </div>
-                <div class="contenedor-dos">
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="status"
-                        [(ngModel)]="marketplace.status"
-                        name="status"
-                        required
-                    />
-                </div>
-            </div>
-            <div class="contiene">
-                <div class="contenedor-uno">
-                    <label for="priority" class="form-label">Prioridad</label>
-                </div>
-                <div class="contenedor-uno">
-                    <label for="stringId" class="form-label">Marketplace Id</label>
-                </div>
-            </div>
-            <div class="contiene">
-                <div class="contenedor-dos">
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="priority"
-                        [(ngModel)]="marketplace.priority"
-                        name="priority"
-                        required
-                    />
-                </div>
-                <div class="contenedor-dos">
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="stringId"
-                        [(ngModel)]="marketplace.stringId"
-                        name="stringId"
-                        required
-                    />
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="botones">
-        <div class="boton-uno">
-            <button class="btn btn-primary" (click)="updateMp(marketplace)">
-                Actualizar
-            </button>
-        </div>
-        <div class="boton-dos">
-            <button class="btn btn-primary" (click)="cancelar()">
-                Cancelar
-            </button>
-        </div>
-    </div>
-</div>-->
-
-<!-- Menú lateral -->
 <div class="c">
     <div class="caja">
       <nav class="navbar bg-body-tertiary" (click)="mostrarDatos('Dafiti')">
@@ -309,7 +106,7 @@
     </div>
     <div class="row text-center my-3">
         <div class="col">
-          <button class="btn btn-primary" (click)="createMp(marketplace)">Crear</button>
+          <button class="btn btn-primary" (click)="createMp()">Crear</button>
         </div>
         <div class="col">
           <button class="btn btn-danger" (click)="cancelar()">Cancelar</button>
@@ -317,4 +114,69 @@
       </div>
   </div>
 
+  <div class="contenedor-formulario" *ngIf="ver">
+    <div class="titulo">
+      <p>Crear nuevo marketplace</p>
+    </div>
+    <div class="contenedores">
+      <form>
+        <div class="contiene">
+          <div class="contenedor-uno">
+            <label for="newMarketplacePk" class="form-label">Marketplace Pk</label>
+          </div>
+          <div class="contenedor-uno">
+            <label for="newMarketplaceshopYujuPk" class="form-label">Yuju PK</label>
+          </div>
+        </div>
+        <div class="contiene">
+          <div class="contenedor-dos">
+            <input type="text" class="form-control" id="newMarketplacePk" [(ngModel)]="newMarketplace.marketplacePk" name="newMarketplacePk" required />
+          </div>
+          <div class="contenedor-dos">
+            <input type="text" class="form-control" id="newMarketplaceshopYujuPk" [(ngModel)]="newMarketplace.shopYujuPk" name="newMarketplaceshopYujuPk" required />
+          </div>
+        </div>
+        <div class="contiene">
+          <div class="contenedor-uno">
+            <label for="newMarketplacename" class="form-label">Nombre</label>
+          </div>
+          <div class="contenedor-uno">
+            <label for="newMarketplacestatus" class="form-label">Status</label>
+          </div>
+        </div>
+        <div class="contiene">
+          <div class="contenedor-dos">
+            <input type="text" class="form-control" id="newMarketplacename" [(ngModel)]="newMarketplace.name" name="newMarketplacename" required/>
+          </div>
+          <div class="contenedor-dos">
+            <input type="text" class="form-control" id="newMarketplacestatus" [(ngModel)]="newMarketplace.status" name="newMarketplacestatus" required />
+          </div>
+        </div>
+        <div class="contiene">
+          <div class="contenedor-uno">
+            <label for="newMarketplacepriority" class="form-label">Prioridad</label>
+          </div>
+          <div class="contenedor-uno">
+            <label for="newMarketplacestringId" class="form-label">Marketplace Id</label>
+          </div>
+        </div>
+        <div class="contiene">
+          <div class="contenedor-dos">
+            <input type="text" class="form-control" id="newMarketplacepriority" [(ngModel)]="newMarketplace.priority" name="newMarketplacepriority" required />
+          </div>
+          <div class="contenedor-dos">
+            <input type="text" class="form-control" id="newMarketplacestringId" [(ngModel)]="newMarketplace.stringId" name="newMarketplacestringId" required />
+          </div>
+        </div>
+        <div class="row text-center my-3">
+            <div class="col">
+              <button class="btn btn-primary" (click)="saveMp(newMarketplace)">Guardar</button>
+            </div>
+            <div class="col">
+              <button class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+            </div>
+        </div>
+    </form>
+    </div>
+  </div>
 

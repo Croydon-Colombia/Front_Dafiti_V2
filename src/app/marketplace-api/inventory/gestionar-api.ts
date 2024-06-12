@@ -26,4 +26,11 @@ export class GestionarService {
         });
     }
 
+      createMp(marketplace: InventoryMp): Observable<InventoryMp> {
+        console.log('Enviando datos para crear:', marketplace);
+        return this.http.post<InventoryMp>(`${this.apiUrl}/CreateMarketPlace`, marketplace, {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+        });
+      }
+
 }

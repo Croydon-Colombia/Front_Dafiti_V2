@@ -10,10 +10,22 @@ import { InventoryMp } from 'app/Models/inventory-mp';
 export class GestionarmpComponent implements OnInit {
 
     mostrar: boolean = false;
+    ver: boolean = false;
 
     opcionSeleccionada: string | null = null;
 
     marketplaces: InventoryMp[] = [];
+
+    newMarketplace: InventoryMp = {
+        marketplacePk: 0,
+        shopYujuPk: 0,
+        name: 'MarketPlace',
+        status: true,
+        priority: 0,
+        stringId: 'MP',
+        createtAt: new Date().toISOString(),
+        updateAt: new Date().toISOString()
+      };
 
   constructor( private gestionarService: GestionarService) {
     console.log('Servicio conectado de Gestionar MP', gestionarService);
@@ -65,9 +77,26 @@ export class GestionarmpComponent implements OnInit {
     });
   }
 
+  createMp() {
+    this.mostrar = false;
+    this.ver = true;
+  }
+
+  saveMp(marketplace: InventoryMp) {
+    console.log('Datos enviados para crear:', marketplace);
+    this.gestionarService.createMp(marketplace).subscribe(() => {
+      alert(`Marketplace ${marketplace.name} creado`);
+      window.location.reload();
+      this.mostrarMp();
+    }, error => {
+      console.error('Error creando los datos: ', error);
+    });
+  }
+
   cancelar(){
     this.opcionSeleccionada = null;
     this.mostrar = false;
+    this.ver = false;
   }
 
 }
