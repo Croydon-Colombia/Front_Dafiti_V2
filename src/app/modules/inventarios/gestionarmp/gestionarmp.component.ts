@@ -69,7 +69,7 @@ export class GestionarmpComponent implements OnInit {
     };
     console.log('Datos enviados para actualizar:', updateData);
     this.gestionarService.updateMp([{...marketplace, ...updateData}]).subscribe(() => {
-      alert(`Marketplace Pk ${marketplace.marketplacePk} actualizado`);
+      alert(`Marketplace ${marketplace.name} con Pk ${marketplace.marketplacePk} actualizado`);
       window.location.reload();
       this.mostrarMp();
     }, error => {
@@ -85,12 +85,24 @@ export class GestionarmpComponent implements OnInit {
   saveMp(marketplace: InventoryMp) {
     console.log('Datos enviados para crear:', marketplace);
     this.gestionarService.createMp(marketplace).subscribe(() => {
-      alert(`Marketplace ${marketplace.name} creado`);
+      alert(`Marketplace ${marketplace.name} ${marketplace.marketplacePk} creado`);
       window.location.reload();
       this.mostrarMp();
     }, error => {
       console.error('Error creando los datos: ', error);
     });
+  }
+
+  deleteMp(marketplace: InventoryMp) {
+    if (confirm(`¿Está seguro de que desea eliminar el marketplace ${marketplace.name} con Pk ${marketplace.marketplacePk}?`)) {
+      this.gestionarService.deleteMp(marketplace).subscribe(() => {
+        alert(`Marketplace ${marketplace.name} con Pk ${marketplace.marketplacePk} eliminado`);
+        window.location.reload();
+        this.mostrarMp();
+      }, error => {
+        console.error('Error eliminando los datos: ', error);
+      });
+    }
   }
 
   cancelar(){

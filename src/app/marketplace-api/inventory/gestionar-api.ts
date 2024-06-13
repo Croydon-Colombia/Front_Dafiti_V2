@@ -26,9 +26,16 @@ export class GestionarService {
         });
     }
 
-      createMp(marketplace: InventoryMp): Observable<InventoryMp> {
+    createMp(marketplace: InventoryMp): Observable<InventoryMp> {
         console.log('Enviando datos para crear:', marketplace);
         return this.http.post<InventoryMp>(`${this.apiUrl}/CreateMarketPlace`, marketplace, {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+        });
+    }
+
+    deleteMp(marketplace: InventoryMp): Observable<InventoryMp> {
+        console.log('Enviando datos para eliminar:', marketplace);
+        return this.http.post<InventoryMp>(`${this.apiUrl}/DeleteMarketPlace`,  marketplace , {
           headers: new HttpHeaders({ 'Content-Type': 'application/json' })
         });
       }
