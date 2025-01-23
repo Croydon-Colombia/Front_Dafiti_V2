@@ -80,5 +80,18 @@ input[type="file"] {
   .error-message {
     color: red;
   }
+  .small-icon {
+    width: 24px;
+    height: 24px;
+}
+.custom-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.custom-label span {
+    margin-left: 10px;
+}
 
 

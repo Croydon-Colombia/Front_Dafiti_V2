@@ -10,97 +10,105 @@ import { InventoryMp } from 'app/Models/inventory-mp';
 export class GestionarmpComponent implements OnInit {
 
     mostrar: boolean = false;
+    ver: boolean = false;
 
     opcionSeleccionada: string | null = null;
 
-    datos: InventoryMp[];
+    marketplaces: InventoryMp[] = [];
 
-    nuevoDato: InventoryMp[] = [{
-        marketplacePk: 157490,
-        shopYujuPk: 333333,
-        name: "Exito",
-        status: 1,
-        priority: 6,
-        stringId: "EX",
-        createtAt: "2021-10-21T15:05:24",
-        updateAt: "2021-11-16T08:21:09"
-      },
-      {
-        marketplacePk: 157487,
-        shopYujuPk: 111,
-        name: "Dafiti",
-        status: 1,
-        priority: 2,
-        stringId: "DF",
-        createtAt: "2021-10-21T15:05:24",
-        updateAt: "2021-11-16T08:21:09"
-      },
-      {
-        marketplacePk: 147488,
-        shopYujuPk: 111,
-        name: "Mercado Libre",
-        status: 1,
-        priority: 3,
-        stringId: "MC",
-        createtAt: "2021-10-21T15:05:24",
-        updateAt: "2022-03-02T09:01:34"
-      },
-      {
-        marketplacePk: 157489,
-        shopYujuPk: 111,
-        name: "Linio",
-        status: 1,
-        priority: 5,
-        stringId: "LI",
-        createtAt: "2021-10-21T15:05:24",
-        updateAt: "2021-11-16T08:21:09"
-      },
-      {
-        marketplacePk: 157491,
-        shopYujuPk: 444444,
-        name: "Falabella",
-        status: 1,
-        priority: 4,
-        stringId: "FL",
-        createtAt: "2021-10-21T15:05:24",
-        updateAt: "2021-11-16T08:21:09"
-      },
-      {
-        marketplacePk: 157493,
-        shopYujuPk: 666666,
-        name: "Mercado Shop",
-        status: 1,
-        priority: 1,
-        stringId: "MS",
-        createtAt: "2021-11-15T11:32:12",
-        updateAt: "2021-11-16T08:21:09"
-      }];
+    newMarketplace: InventoryMp = {
+        marketplacePk: 0,
+        shopYujuPk: 0,
+        name: 'MarketPlace',
+        status: true,
+        priority: 0,
+        stringId: 'MP',
+        createtAt: new Date().toISOString(),
+        updateAt: new Date().toISOString()
+      };
 
-  constructor( private gestionarService:GestionarService) {
-    console.log('Servicio conectado: '+ gestionarService);
+  constructor( private gestionarService: GestionarService) {
+    console.log('Servicio conectado de Gestionar MP', gestionarService);
    }
 
   ngOnInit() {
-
-    /*this.gestionarService.get().subscribe( datos => {
-        this.datos = datos;
-        if(this.datos.length <= 0){
-            //this.datos.push(this.nuevoDato);
-            console.log('No hay datos');
-        }
-        console.log('datos cargados: '+ this.datos);
-    })*/
-    this.datos = [...this.nuevoDato];
-    console.log('datos: '+this.datos);
-
+    this.mostrarMp();
   }
 
   mostrarDatos(opcion: string){
     this.opcionSeleccionada = opcion;
     this.mostrar = true;
     console.log('opcion seleccionada: '+this.opcionSeleccionada);
-    console.log('opcion seleccionada: '+this.mostrar);
+    console.log('Mostrar: '+this.mostrar);
   }
 
+  mostrarMp(){
+    this.gestionarService.get().subscribe( data => {
+        this.marketplaces = data;
+
+        if(this.marketplaces.length <= 0){
+            console.log('No hay datos');
+        }
+        console.log('Cargando datos....');
+    })
+  }
+
+  updateMp(marketplace: InventoryMp) {
+    if (!marketplace.name || marketplace.status === undefined || !marketplace.priority || !marketplace.stringId) {
+        console.error('Datos inválidos:', marketplace);
+        alert('Todos los campos deben estar llenos');
+        return;
+      }
+
+    const updateData = {
+      name: marketplace.name,
+      status: !!marketplace.status,
+      priority: marketplace.priority,
+      stringId: marketplace.stringId,
+      updateAt: new Date().toISOString()
+    };
+    console.log('Datos enviados para actualizar:', updateData);
+    this.gestionarService.updateMp([{...marketplace, ...updateData}]).subscribe(() => {
+      alert(`Marketplace ${marketplace.name} con Pk ${marketplace.marketplacePk} actualizado`);
+      window.location.reload();
+      this.mostrarMp();
+    }, error => {
+      console.error('Error actualizando los datos: ', error);
+    });
+  }
+
+  createMp() {
+    this.mostrar = false;
+    this.ver = true;
+  }
+
+  saveMp(marketplace: InventoryMp) {
+    console.log('Datos enviados para crear:', marketplace);
+    this.gestionarService.createMp(marketplace).subscribe(() => {
+      alert(`Marketplace ${marketplace.name} ${marketplace.marketplacePk} creado`);
+      window.location.reload();
+      this.mostrarMp();
+    }, error => {
+      console.error('Error creando los datos: ', error);
+    });
+  }
+
+  deleteMp(marketplace: InventoryMp) {
+    if (confirm(`¿Está seguro de que desea eliminar el marketplace ${marketplace.name} con Pk ${marketplace.marketplacePk}?`)) {
+      this.gestionarService.deleteMp(marketplace).subscribe(() => {
+        alert(`Marketplace ${marketplace.name} con Pk ${marketplace.marketplacePk} eliminado`);
+        window.location.reload();
+        this.mostrarMp();
+      }, error => {
+        console.error('Error eliminando los datos: ', error);
+      });
+    }
+  }
+
+  cancelar(){
+    this.opcionSeleccionada = null;
+    this.mostrar = false;
+    this.ver = false;
+  }
 
 }

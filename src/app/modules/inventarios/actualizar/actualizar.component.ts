@@ -1,6 +1,5 @@
 import { ActualizarService } from './../../../marketplace-api/inventory/actualizar-api';
 import { Component, OnInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-actualizar',
@@ -11,48 +10,44 @@ export class ActualizarComponent implements OnInit {
 
   archivoSeleccionado: File | undefined;
 
-  arregloArchivos:File[]=[];
-
-  constructor(private actualizarService:ActualizarService) {
-    console.log('El servicio está conectando: ',actualizarService);
+  constructor(private actualizarService: ActualizarService) {
+    console.log('El servicio está conectando: ', actualizarService);
   }
 
   ngOnInit() {}
 
-  //Archivo seleccionado
   onFileSelected(event: Event) {
     const inputElement = event.target as HTMLInputElement;
-    this.archivoSeleccionado = inputElement.files ? inputElement.files[0] : null;
+    this.archivoSeleccionado = inputElement.files ? inputElement.files[0] : undefined;
 
     if (!this.archivoSeleccionado) {
         console.error('No se ha seleccionado ningún archivo');
-    }else{
-        this.arregloArchivos.push(this.archivoSeleccionado)
+    } else {
         console.log('Detalles del archivo');
         console.log('Nombre del archivo', this.archivoSeleccionado.name);
         console.log('Tamaño del archivo:', (this.archivoSeleccionado.size / 1024).toFixed(2), 'KB');
-        console.log('Arreglo: '+this.arregloArchivos);
-        console.log('Tamaño del arreglo: '+this.arregloArchivos.length);
     }
   }
 
-  //Envío del archivo
   onSubmit() {
     console.log('voy a enviar el archivo');
 
-    if (this.archivoSeleccionado !== null) {
+    if (this.archivoSeleccionado) {
       this.actualizarService.uploadFile(this.archivoSeleccionado).subscribe(
         (respuesta) => {
-          console.log('Archivo subido exitosamente', respuesta);
+          console.log('Archivo enviado exitosamente', respuesta);
+          alert('Archivo enviado exitosamente!');
+          // Recargar la página después de 1 segundo (opcional)
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         },
         (error) => {
-          console.error('Error al subir el archivo', error);
+          console.error('Error al enviar el archivo', error);
         }
       );
     } else {
       console.warn('No se ha seleccionado ningún archivo.');
     }
   }
-
-
 }

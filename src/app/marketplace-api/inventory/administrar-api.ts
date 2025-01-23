@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InventoryParameters } from 'app/Models/inventory-parameters';
 
@@ -8,13 +8,19 @@ import { InventoryParameters } from 'app/Models/inventory-parameters';
 })
 export class AdministrarService {
 
-    private apiUrl='http://192.168.0.177:8041/api/Parameters/GetAllParameters';
+    private apiUrl='http://192.168.0.97:8089/api/Parameters';
 
     constructor(private http:HttpClient) { }
 
-    get():Observable<InventoryParameters[]>{
-    return this.http.get<InventoryParameters[]>(this.apiUrl);
+    getAllParameters():Observable<InventoryParameters[]>{
+        console.log('Entrando al servicio para ver los parametros');
+    return this.http.get<InventoryParameters[]>(`${this.apiUrl}/GetAllParameters`);
+    }
 
-}
+    updateParameter(parameter: InventoryParameters): Observable<any> {
+        return this.http.post(`${this.apiUrl}/UpdateParameter`, parameter, {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+        });
+      }
 
 }

@@ -1,25 +1,45 @@
-<div class="contenedor-formulario">
-    <div class="titulo">
-        <p>Parámetros de inventario</p>
-    </div>
-    <div class="titulos">
-        <div class="titulo-uno">
-            <p>Descripción</p>
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-info text-white text-center">
+            <h4 class="mb-0">Parámetros de inventario</h4>
         </div>
-        <div class="titulo-dos">
-            <p>Valor</p>
-        </div>
-    </div>
-    <div class="contenedores" *ngFor="let dato of datos">
-        <form>
-            <div class="contiene">
-                <div class="contenedor-uno">
-                    <label for="descripcion" class="form-label">{{ dato.description }}</label>
-                </div>
-                <div class="contenedor-dos">
-                    <input type="text" class="form-control" id="apellido" placeholder="{{ dato.valKey }}">
+        <div class="card-body">
+            <div class="row font-weight-bold mb-3 text-center">
+                <div class="col-md-4">Descripción</div>
+                <div class="col-md-8">Valor</div>
+            </div>
+            <div *ngFor="let parametro of parametros">
+                <form (ngSubmit)="updateParameter(parametro)">
+                    <div class="form-group row align-items-center">
+                        <label
+                            for="descripcion-{{ parametro.id }}"
+                            class="col-md-4 col-form-label"
+                            >{{ parametro.description }}</label
+                        >
+                        <div class="col-md-8">
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="descripcion-{{ parametro.id }}"
+                                [(ngModel)]="parametro.valKey"
+                                name="valKey-{{ parametro.id }}"
+                                required
+                            />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-12 text-center">
+                    <button
+                        type="button"
+                        class="btn btn-outline-info btn-sm"
+                        (click)="updateAllParameters()"
+                    >
+                        Actualizar
+                    </button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>

@@ -153,6 +153,7 @@ export class AuthUtils
      */
     private static _decodeToken(token: string): any
     {
+        try{
         // Return if there is no token
         if ( !token )
         {
@@ -176,6 +177,10 @@ export class AuthUtils
         }
 
         return JSON.parse(decoded);
+        } catch(error) {
+            console.error('Error decoding token:', error);
+            return null;
+        }
     }
 
     /**
@@ -186,6 +191,7 @@ export class AuthUtils
      */
     private static _getTokenExpirationDate(token: string): Date | null
     {
+        try{
         // Get the decoded token
         const decodedToken = this._decodeToken(token);
 
@@ -200,5 +206,10 @@ export class AuthUtils
         date.setUTCSeconds(decodedToken.exp);
 
         return date;
+    } catch (error) {
+        console.error('Error getting token expiration date:', error);
+        return null;
     }
+}
+
 }
